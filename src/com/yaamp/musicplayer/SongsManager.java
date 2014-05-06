@@ -81,7 +81,7 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 		for(File f:files)
 		{
 			if(f.isDirectory())
-				createDatabase(context,f.getPath());
+				createMusicDB(context,f.getPath(),mdb);
 			else
 			{
 				
@@ -137,7 +137,8 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 	
 	public static void scanLibrary(Context context,String filePath)
 	{
-		MusicDB mdb=new MusicDB(context);	
+		MusicDB mdb=new MusicDB(context);
+		mdb.dropTable();
 		createMusicDB( context, filePath,mdb) ;
 	}
 	
@@ -145,11 +146,15 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 	public static void createDatabase(Context context,String filePath){
 		
 		MusicDB mdb=new MusicDB(context);	
-		 try {
-			mdb.recordCount();
-		} catch (Exception e) {
-			createMusicDB(context,filePath,mdb) ;
-			
+		if(!mdb.isTablePresent())
+		{
+			try {
+				mdb.createTable();
+				createMusicDB(context,filePath,mdb) ;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}

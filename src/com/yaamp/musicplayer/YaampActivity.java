@@ -42,7 +42,7 @@ import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter;
 import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter.SimpleGestureListener;
 
 /**
- * @author unbounded
+ * @author zaki
  * 
  */
 public class YaampActivity extends FragmentActivity implements
@@ -75,7 +75,6 @@ public class YaampActivity extends FragmentActivity implements
 	private boolean isRepeat = false;
 	
 	private ArrayList<Music> musicList = new ArrayList<Music>();
-	private MusicDB musicDB=new MusicDB(this);
 	
 	final String MEDIA_PATH = Environment.getExternalStorageDirectory()
 			.getPath();
@@ -152,14 +151,7 @@ public class YaampActivity extends FragmentActivity implements
 			break;
 		
 
-		case RESULT_LIST:
-			
-			if (data != null) 
-			{
-				currentSongIndex = data.getExtras().getInt("songIndex");
-				playSong(currentSongIndex);
-			}
-			break;
+		
 			
 		case RESULT_SEARCH:
 			if (data != null) 
@@ -178,6 +170,18 @@ public class YaampActivity extends FragmentActivity implements
 				ArrayList<Music> artistSongs=data.getParcelableArrayListExtra("artistSongs");
 				musicList=artistSongs;
 				playMusic(music);
+			}
+			break;
+			
+		case RESULT_LIST:
+			
+			if (data != null) 
+			{
+				Music music=(Music)data.getParcelableExtra("allMusicSong");
+				ArrayList<Music> listSongs=data.getParcelableArrayListExtra("songsList");
+				musicList=listSongs;
+				playMusic(music);
+				
 			}
 			break;
 			
@@ -238,7 +242,7 @@ public class YaampActivity extends FragmentActivity implements
 	 * @param songIndex
 	 *            - index of song
 	 * */
-	public void playSong(int songIndex) {
+	public void playSongs(int songIndex) {
 		// Play song
 		this.songIndex = songIndex;
 		try {
@@ -375,20 +379,20 @@ public class YaampActivity extends FragmentActivity implements
 		// check for repeat is ON or OFF
 		if (isRepeat) {
 			// repeat is on play same song again
-			playSong(currentSongIndex);
+			playMusic(musicList.get(currentSongIndex));
 		} else if (isShuffle) {
 			// shuffle is on - play a random song
 			Random rand = new Random();
 			currentSongIndex = rand.nextInt((musicList.size() - 1) - 0 + 1) + 0;
-			playSong(currentSongIndex);
+			playMusic(musicList.get(currentSongIndex));
 		} else {
 			// no repeat or shuffle ON - play next song
 			if (currentSongIndex < (musicList.size() - 1)) {
-				playSong(currentSongIndex + 1);
+				playMusic(musicList.get(currentSongIndex+1));
 				currentSongIndex = currentSongIndex + 1;
 			} else {
 				// play first song
-				playSong(0);
+				playMusic(musicList.get(0));
 				currentSongIndex = 0;
 			}
 		}
@@ -416,11 +420,11 @@ public class YaampActivity extends FragmentActivity implements
 			case SimpleGestureFilter.SWIPE_RIGHT:
 
 				if (currentSongIndex > 0) {
-					playSong(currentSongIndex - 1);
+					playMusic(musicList.get(currentSongIndex-1));
 					currentSongIndex = currentSongIndex - 1;
 				} else {
 					// play last song
-					playSong(musicList.size() - 1);
+					playMusic(musicList.get(musicList.size()-1));
 					currentSongIndex = musicList.size() - 1;
 				}
 
@@ -428,11 +432,11 @@ public class YaampActivity extends FragmentActivity implements
 			case SimpleGestureFilter.SWIPE_LEFT:
 				// check if next song is there or not
 				if (currentSongIndex < (musicList.size() - 1)) {
-					playSong(currentSongIndex + 1);
+					playMusic(musicList.get(currentSongIndex-1));
 					currentSongIndex = currentSongIndex + 1;
 				} else {
 					// play first song
-					playSong(0);
+					playMusic(musicList.get(0));
 					currentSongIndex = 0;
 				}
 
@@ -618,7 +622,7 @@ public class YaampActivity extends FragmentActivity implements
 				if (isGestureEnabled) {
 					Random rand = new Random();
 					currentSongIndex = rand.nextInt((musicList.size() - 1) - 0 + 1) + 0;
-					playSong(currentSongIndex);
+					playMusic(musicList.get(currentSongIndex));
 					Toast.makeText(getApplicationContext(), "Random",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -672,11 +676,11 @@ public class YaampActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// check if next song is there or not
 				if (currentSongIndex < (musicList.size() - 1)) {
-					playSong(currentSongIndex + 1);
+					playMusic(musicList.get(currentSongIndex-1));
 					currentSongIndex = currentSongIndex + 1;
 				} else {
 					// play first song
-					playSong(0);
+					playMusic(musicList.get(0));
 					currentSongIndex = 0;
 				}
 
@@ -691,11 +695,11 @@ public class YaampActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				if (currentSongIndex > 0) {
-					playSong(currentSongIndex - 1);
+					playMusic(musicList.get(currentSongIndex-1));
 					currentSongIndex = currentSongIndex - 1;
 				} else {
 					// play last song
-					playSong(musicList.size() - 1);
+					playMusic(musicList.get(musicList.size() - 1));
 					currentSongIndex = musicList.size() - 1;
 				}
 

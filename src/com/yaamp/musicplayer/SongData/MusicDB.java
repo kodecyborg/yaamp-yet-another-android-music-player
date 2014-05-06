@@ -229,29 +229,29 @@ public class MusicDB extends SQLiteOpenHelper{
 	return musics;
 		}
 	
-	public long recordCount()
+	public boolean isTablePresent()
 	{
-		String query="SELECT COUNT(*) FROM "
-					+TABLE_NAME;
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor=null;
-		long total=0;
-	    try {
-			cursor = db.rawQuery(query, null);
+		SQLiteDatabase db =null;
+	
+		        if(db == null || !db.isOpen()) {
+		        	db = getReadableDatabase();
+		        }
 
-			if (cursor.moveToFirst())
-				total=cursor.getLong(0);
+		        if(!db.isReadOnly()) {
+		        	db.close();
+		        	db = getReadableDatabase();
+		        }
+		    
 
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    finally{
-	    	cursor.close();
-	    	db.close();
-	    }
-		return total;
+		    Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+TABLE_NAME+"'", null);
+		    if(cursor!=null) {
+		        if(cursor.getCount()>0) {
+		                            cursor.close();
+		            return true;
+		        }
+		                    cursor.close();
+		    }
+		    return false;
 		
 	}
 	
