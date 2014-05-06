@@ -254,6 +254,8 @@ public class MusicDB extends SQLiteOpenHelper{
 		return total;
 		
 	}
+	
+	
 	public ArrayList<Music> getMusicsByColumnNameValue(String columnName,String columnValue) {
 		
 		ArrayList<Music> musics =new ArrayList<Music>();

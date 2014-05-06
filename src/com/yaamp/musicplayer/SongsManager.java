@@ -70,7 +70,8 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 	}
 
 	private static void createMusicDB(Context context,String filePath,MusicDB mdb) {
-
+	
+		
 		File home = new File(filePath);
 		File[] files=home.listFiles();
 		MediaMetadataRetriever mmr=new MediaMetadataRetriever();
@@ -131,16 +132,26 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 			
 			}
 				}
-		}
+		}}
 		
+	
+	public static void scanLibrary(Context context,String filePath)
+	{
+		MusicDB mdb=new MusicDB(context);	
+		createMusicDB( context, filePath,mdb) ;
 	}
+	
 	
 	public static void createDatabase(Context context,String filePath){
 		
-		MusicDB mdb=new MusicDB(context);
-		
-		createMusicDB(context,filePath,mdb) ;
-		
+		MusicDB mdb=new MusicDB(context);	
+		 try {
+			mdb.recordCount();
+		} catch (Exception e) {
+			createMusicDB(context,filePath,mdb) ;
+			
+		}
+
 	}
 
 	public static ArrayList<HashMap<String, String>> pullParse(String xmlPath)

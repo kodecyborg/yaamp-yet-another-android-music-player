@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.yaamp.musicplayer"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:name="com.yaamp.musicplayer.YaampActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable" />
+            
+        </activity>
+        <activity android:name="com.yaamp.musicplayer.PlayListActivity" />
+        <!-- created by zaki at 2014-03-24 22:21:53 -->
+        <activity android:name="com.yaamp.musicplayer.SettingActivity" />
+        <!-- created by zaki at 2014-03-24 22:51:47 -->
+        <activity android:name="com.yaamp.musicplayer.Preference" />
+          <!-- created by zaki at 2014-03-24 22:51:47 -->
+        <activity android:name="com.yaamp.musicplayer.EquoActivity" />
+  <!-- created by zaki at 2014-03-24 22:51:47 -->
+          <activity android:name="com.yaamp.musicplayer.DetailActivity" />
+         <!-- created by zaki at 2014-03-24 22:51:47 -->
+        <activity android:name="com.yaamp.musicplayer.PlayerView" />
+         <!-- created by zaki at 2014-03-24 22:51:47 -->
+        <service
+            android:name="com.yaamp.musicplayer.MusicService"
+            android:enabled="false" />
+
+        <activity android:name="com.yaamp.musicplayer.TabActivity" >
+        </activity>
+        <activity
+            android:name="com.yaamp.musicplayer.MusicsFromAlbumFragment"
+            android:label="@string/title_activity_album_musics" >
+        </activity>
+    </application>
+
+</manifest><!-- AndroidBuildingMusicPlayerActivity -->
+
