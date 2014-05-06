@@ -1,6 +1,5 @@
 package com.yaamp.musicplayer.SongData;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +14,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
 import android.util.Log;
 
 public class MusicDB extends SQLiteOpenHelper{
@@ -36,7 +34,6 @@ public class MusicDB extends SQLiteOpenHelper{
     public  final String KEY_ALBUM_NAME = "albumName";
     public  final String KEY_ARTIST_NAME = "artistName";
     public  final String KEY_YEAR = "year";
-    public  final String KEY_TITLE = "title";
     public  final String KEY_BITRATE = "bitRate";
     public  final String KEY_DURATION = "duration";
     public  final String KEY_TRACK_NUMBER = "trackNumber";
@@ -47,7 +44,6 @@ public class MusicDB extends SQLiteOpenHelper{
     
 	public MusicDB(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		// TODO Auto-generated constructor stub
 		this.context=context;
 	}
 	
@@ -64,7 +60,6 @@ public class MusicDB extends SQLiteOpenHelper{
                 + KEY_ALBUM_NAME+" TEXT,"
                 + KEY_ARTIST_NAME+" TEXT,"
                 + KEY_YEAR+" TEXT,"
-                + KEY_TITLE+" TEXT,"
                 + KEY_BITRATE+" TEXT,"
                 + KEY_DURATION+" TEXT,"
                 + KEY_TRACK_NUMBER+" TEXT,"
@@ -91,20 +86,26 @@ public class MusicDB extends SQLiteOpenHelper{
 	
 	}
 	
+	public void createTable()
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		this.onCreate(db);
+        db.close();
+	}
+	
 	public void dropTable()
 	{
 		
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
 		
-		this.onCreate(db);
+		db.close();
 	}
 	public void dropMusicDB()
 	{
 		
 		context.deleteDatabase(DATABASE_NAME);
-       // new ExportDatabaseFileTask(context, DATABASE_NAME).execute();
-		File file=new File(Environment.getDataDirectory() 
+		/*File file=new File(Environment.getDataDirectory() 
 				+ "/data/"
 				+context.getPackageName()
 				+"/databases/"
@@ -113,6 +114,7 @@ public class MusicDB extends SQLiteOpenHelper{
         if(file.exists())
 		file.delete();
         Log.i("Database deleted",DATABASE_VERSION+"");
+        */
 
 	}
 	
@@ -129,7 +131,6 @@ public class MusicDB extends SQLiteOpenHelper{
 			values.put(KEY_ALBUM_NAME, musicMap.get(KEY_ALBUM_NAME)); // get author
 			values.put(KEY_ARTIST_NAME, musicMap.get(KEY_ARTIST_NAME)); // get author
 			values.put(KEY_YEAR, musicMap.get(KEY_YEAR)); // get author
-			values.put(KEY_TITLE, musicMap.get(KEY_TITLE)); // get author
 			values.put(KEY_BITRATE, musicMap.get(KEY_BITRATE)); // get author
 			values.put(KEY_DURATION, musicMap.get(KEY_DURATION)); // get author
 			values.put(KEY_TRACK_NUMBER, musicMap.get(KEY_TRACK_NUMBER)); // get author
@@ -228,7 +229,31 @@ public class MusicDB extends SQLiteOpenHelper{
 	return musics;
 		}
 	
-	
+	public long recordCount()
+	{
+		String query="SELECT COUNT(*) FROM "
+					+TABLE_NAME;
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor=null;
+		long total=0;
+	    try {
+			cursor = db.rawQuery(query, null);
+
+			if (cursor.moveToFirst())
+				total=cursor.getLong(0);
+
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    finally{
+	    	cursor.close();
+	    	db.close();
+	    }
+		return total;
+		
+	}
 	public ArrayList<Music> getMusicsByColumnNameValue(String columnName,String columnValue) {
 		
 		ArrayList<Music> musics =new ArrayList<Music>();

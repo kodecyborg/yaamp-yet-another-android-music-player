@@ -187,7 +187,7 @@ public class Music implements Parcelable {
 
 	public String getDuration() {
 		if(duration==null)
-			return "";
+			return "0";
 		return duration;
 	}
 

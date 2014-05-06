@@ -36,16 +36,14 @@ import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 public class SongsManager extends AsyncTask<String, Integer, String>{
 	// SDCard Path
 	final String MEDIA_PATH = new String(Environment.getExternalStorageDirectory().getPath());
-	private Context context;
-	private static ArrayList<HashMap<String, String>> MySongsList = new ArrayList<HashMap<String, String>>();
 	private static ArrayList<HashMap<String, String>> xmlSongsList = new ArrayList<HashMap<String, String>>();
 
 	static String XML_OUTPUT_FILE=Environment.getExternalStorageDirectory().getPath()+"/yaamp_sdb.xml";
-	static String XML_ROOT_NODE="song";
 
 
 	
@@ -70,16 +68,15 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 	
 		
 	}
-	
-	public static void createDatabase(Context context,String filePath){
-		
+
+	private static void createMusicDB(Context context,String filePath,MusicDB mdb) {
+
 		File home = new File(filePath);
 		File[] files=home.listFiles();
 		MediaMetadataRetriever mmr=new MediaMetadataRetriever();
-		MusicDB mdb=new MusicDB(context);
+		
 		//mdb.dropMusicDB();
 		Music music=null;
-		
 		for(File f:files)
 		{
 			if(f.isDirectory())
@@ -97,7 +94,6 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 						f.getName().endsWith(".M4A")
 						
 						){
-				HashMap<String, String> song = new HashMap<String, String>();			
 				
 				
 				mmr.setDataSource(f.getPath());
@@ -132,30 +128,21 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 				
 				mdb.addMusic(music);
 
-				song.put("songPath", songPath);
-				song.put("songFileName", songFileName);
-				song.put("title", title);
-				song.put("fileDirectory", fileDirectory);					
-				song.put("albumName", albumName);
-				song.put("artistName", artistName);
-				song.put("year", year);
-				
-				song.put("bitRate", bitRate);
-				song.put("duration", duration);
-				song.put("trackNumber", trackNumber);
-				song.put("author", author);
-				song.put("mimeType", mimeType);
-				
-				// Adding each song to SongList
-				MySongsList.add(song);
+			
 			}
 				}
 		}
-
-		// return songs list array
 		
 	}
 	
+	public static void createDatabase(Context context,String filePath){
+		
+		MusicDB mdb=new MusicDB(context);
+		
+		createMusicDB(context,filePath,mdb) ;
+		
+	}
+
 	public static ArrayList<HashMap<String, String>> pullParse(String xmlPath)
 	{
 		HashMap<String, String> song=new HashMap<String, String>();
@@ -271,6 +258,7 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 
 	}
 	
+
 	public static  ArrayList<HashMap<String, String>> getPlayListFromXML(String xmlFilePath,String rootNode)
 	{
 		

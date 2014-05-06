@@ -6,7 +6,6 @@ package com.yaamp.musicplayer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,7 +22,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,11 +34,8 @@ import android.widget.ListAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
-import com.yaamp.musicplayer.SongData.MusicDataCacher;
-import com.yaamp.musicplayer.SongData.MusicListsData;
 import com.yaamp.musicplayer.sensormanager.ShakeDetector;
 import com.yaamp.musicplayer.sensormanager.ShakeDetector.OnShakeListener;
 import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter;
@@ -80,7 +75,7 @@ public class YaampActivity extends FragmentActivity implements
 	private boolean isRepeat = false;
 	
 	private ArrayList<Music> musicList = new ArrayList<Music>();
-	private MusicDB musicDB;
+	private MusicDB musicDB=new MusicDB(this);
 	
 	final String MEDIA_PATH = Environment.getExternalStorageDirectory()
 			.getPath();
@@ -102,7 +97,6 @@ public class YaampActivity extends FragmentActivity implements
 	private String artistName = "";
 	private String title = "";
 	private int songIndex = 0;
-	private String KEY = "MUSIC_DATA_CACHE";
 
 	private PlayerControl playerControl=PlayerControl.getInstance();
 	
@@ -537,8 +531,8 @@ public class YaampActivity extends FragmentActivity implements
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mShakeDetector = new ShakeDetector();
 
-		musicDB=new MusicDB(getApplicationContext());
-		musicList=musicDB.getAllMusics();
+		
+		
 		// SharedPreferences sharedPrefs =
 		// PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -555,17 +549,19 @@ public class YaampActivity extends FragmentActivity implements
 		songProgressBar.setOnSeekBarChangeListener(this); // Important
 		mp.setOnCompletionListener(this); // Important
 		
-			musicList=musicDB.getAllMusics();
-			
+		//musicDB.dropTable();
+		//musicDB.dropMusicDB();
+		SongsManager.createDatabase(getApplicationContext(),MEDIA_PATH);
+		//musicList=musicDB.getAllMusics();
+
 		/**
 		 * Uncomment for database test
 		 * /	
+	
+	musicList=musicDB.getAllMusics();
+			musicDB.dropTable();
+			musicDB.dropMusicDB();
 			
-		//playSong(music);
-		//musicDB.dropMusicDB();
-		//musicDB.dropTable();
-		//SongsManager.createDatabase(getApplicationContext(),MEDIA_PATH);
-
 		
 		
 		
