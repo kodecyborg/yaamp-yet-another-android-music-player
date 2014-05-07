@@ -7,6 +7,7 @@ import com.yaamp.musicplayer.R;
 import com.yaamp.musicplayer.SongData.Music;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,7 @@ public class ArtistExpandableListViewAdapter extends BaseExpandableListAdapter {
 	@Override
 	public int getChildrenCount(int groupPosition) {
 		return this.dataList.get(this.headerText.get(groupPosition)).size();
-
+		
 	}
 
 	@Override
@@ -104,7 +105,7 @@ public class ArtistExpandableListViewAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		final String childText = (String) getChild(groupPosition, childPosition);
-
+		
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this.context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

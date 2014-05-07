@@ -7,16 +7,17 @@
 
     <GridView
         android:id="@+id/albumGridView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="4dp"
-        android:columnWidth="80dp"
-        android:gravity="center"
-        android:numColumns="2"
-        android:stretchMode="columnWidth"
-        >
+       android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:numColumns="auto_fit"
+    android:columnWidth="90dp"
+    android:horizontalSpacing="0dp"
+    android:verticalSpacing="0dp"
+    android:gravity="center"
+    android:stretchMode="columnWidth" >
 
     </GridView>
+
+
  
 </LinearLayout>
