@@ -23,7 +23,6 @@ public class AllSongs extends ListFragment {
 		public ArrayList<Music> songsList = new ArrayList<Music>();
 		private final int RESULT_LIST = 3;
 		private MusicDB mdb;
-		private Music music=new Music();
 		// Search EditText
 	    //EditText inputSearch;
 	@Override
@@ -60,16 +59,16 @@ public class AllSongs extends ListFragment {
 					int position, 
 					long id) {
 				// getting listitem index
+				int songIndex = position;
 				
-				music=songsList.get(position);
 				// Starting new intent
 				Intent intent = new Intent(context,YaampActivity.class);
 				
 				// Sending songIndex to PlayerActivity
-				intent.putExtra("allMusicSong", music);
-				intent.putExtra("songsList", songsList);
+				intent.putExtra("songIndex", songIndex);
+			
 				getActivity().setResult(RESULT_LIST, intent);
-				// Closing allSongs view
+				// Closing PlayListView
 				getActivity().finish();
 			}
 		});

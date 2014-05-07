@@ -42,7 +42,7 @@ import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter;
 import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter.SimpleGestureListener;
 
 /**
- * @author zaki
+ * @author unbounded
  * 
  */
 public class YaampActivity extends FragmentActivity implements
@@ -75,7 +75,8 @@ public class YaampActivity extends FragmentActivity implements
 	private boolean isRepeat = false;
 	
 	private ArrayList<Music> musicList = new ArrayList<Music>();
-	
+	private MusicDB musicDB=new MusicDB(this);
+	private ArrayList<Music> allMusics=new ArrayList<Music>();
 	final String MEDIA_PATH = Environment.getExternalStorageDirectory()
 			.getPath();
 	// The following are used for the shake detection
@@ -151,12 +152,23 @@ public class YaampActivity extends FragmentActivity implements
 			break;
 		
 
-		
+		case RESULT_LIST:
+			
+			if (data != null) 
+			{
+				currentSongIndex = data.getExtras().getInt("songIndex");	
+				musicList.clear();
+		      	musicList.addAll(allMusics);
+				playMusic(musicList.get(currentSongIndex));
+			}
+			break;
 			
 		case RESULT_SEARCH:
 			if (data != null) 
 			{
 				Music music=(Music)data.getParcelableExtra("musicFromSearch");
+				musicList.clear();
+				musicList.add(music);
 				playMusic(music);
 			}
 			break;
@@ -170,18 +182,6 @@ public class YaampActivity extends FragmentActivity implements
 				ArrayList<Music> artistSongs=data.getParcelableArrayListExtra("artistSongs");
 				musicList=artistSongs;
 				playMusic(music);
-			}
-			break;
-			
-		case RESULT_LIST:
-			
-			if (data != null) 
-			{
-				Music music=(Music)data.getParcelableExtra("allMusicSong");
-				ArrayList<Music> listSongs=data.getParcelableArrayListExtra("songsList");
-				musicList=listSongs;
-				playMusic(music);
-				
 			}
 			break;
 			
@@ -242,7 +242,7 @@ public class YaampActivity extends FragmentActivity implements
 	 * @param songIndex
 	 *            - index of song
 	 * */
-	public void playSongs(int songIndex) {
+	public void playSong(int songIndex) {
 		// Play song
 		this.songIndex = songIndex;
 		try {
@@ -379,20 +379,20 @@ public class YaampActivity extends FragmentActivity implements
 		// check for repeat is ON or OFF
 		if (isRepeat) {
 			// repeat is on play same song again
-			playMusic(musicList.get(currentSongIndex));
+			playSong(currentSongIndex);
 		} else if (isShuffle) {
 			// shuffle is on - play a random song
 			Random rand = new Random();
 			currentSongIndex = rand.nextInt((musicList.size() - 1) - 0 + 1) + 0;
-			playMusic(musicList.get(currentSongIndex));
+			playSong(currentSongIndex);
 		} else {
 			// no repeat or shuffle ON - play next song
 			if (currentSongIndex < (musicList.size() - 1)) {
-				playMusic(musicList.get(currentSongIndex+1));
+				playSong(currentSongIndex + 1);
 				currentSongIndex = currentSongIndex + 1;
 			} else {
 				// play first song
-				playMusic(musicList.get(0));
+				playSong(0);
 				currentSongIndex = 0;
 			}
 		}
@@ -420,11 +420,11 @@ public class YaampActivity extends FragmentActivity implements
 			case SimpleGestureFilter.SWIPE_RIGHT:
 
 				if (currentSongIndex > 0) {
-					playMusic(musicList.get(currentSongIndex-1));
+					playSong(currentSongIndex - 1);
 					currentSongIndex = currentSongIndex - 1;
 				} else {
 					// play last song
-					playMusic(musicList.get(musicList.size()-1));
+					playSong(musicList.size() - 1);
 					currentSongIndex = musicList.size() - 1;
 				}
 
@@ -432,11 +432,11 @@ public class YaampActivity extends FragmentActivity implements
 			case SimpleGestureFilter.SWIPE_LEFT:
 				// check if next song is there or not
 				if (currentSongIndex < (musicList.size() - 1)) {
-					playMusic(musicList.get(currentSongIndex-1));
+					playSong(currentSongIndex + 1);
 					currentSongIndex = currentSongIndex + 1;
 				} else {
 					// play first song
-					playMusic(musicList.get(0));
+					playSong(0);
 					currentSongIndex = 0;
 				}
 
@@ -534,7 +534,10 @@ public class YaampActivity extends FragmentActivity implements
 		mAccelerometer = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mShakeDetector = new ShakeDetector();
-
+		
+		//Get all music at creation
+		//getParcelableArrayListExtra is gonna fail for big libraries
+	     allMusics=musicDB.getAllMusics();
 		
 		
 		// SharedPreferences sharedPrefs =
@@ -622,7 +625,7 @@ public class YaampActivity extends FragmentActivity implements
 				if (isGestureEnabled) {
 					Random rand = new Random();
 					currentSongIndex = rand.nextInt((musicList.size() - 1) - 0 + 1) + 0;
-					playMusic(musicList.get(currentSongIndex));
+					playSong(currentSongIndex);
 					Toast.makeText(getApplicationContext(), "Random",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -676,11 +679,11 @@ public class YaampActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// check if next song is there or not
 				if (currentSongIndex < (musicList.size() - 1)) {
-					playMusic(musicList.get(currentSongIndex-1));
+					playSong(currentSongIndex + 1);
 					currentSongIndex = currentSongIndex + 1;
 				} else {
 					// play first song
-					playMusic(musicList.get(0));
+					playSong(0);
 					currentSongIndex = 0;
 				}
 
@@ -695,11 +698,11 @@ public class YaampActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				if (currentSongIndex > 0) {
-					playMusic(musicList.get(currentSongIndex-1));
+					playSong(currentSongIndex - 1);
 					currentSongIndex = currentSongIndex - 1;
 				} else {
 					// play last song
-					playMusic(musicList.get(musicList.size() - 1));
+					playSong(musicList.size() - 1);
 					currentSongIndex = musicList.size() - 1;
 				}
 

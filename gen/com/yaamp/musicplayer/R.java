@@ -148,15 +148,14 @@ public final class R {
         public static final int details=0x7f030008;
         public static final int equo=0x7f030009;
         public static final int fragment_albums=0x7f03000a;
-        public static final int fragment_all_songs=0x7f03000b;
-        public static final int fragment_search=0x7f03000c;
-        public static final int grid_single_album=0x7f03000d;
-        public static final int group_by_artist_fragment=0x7f03000e;
-        public static final int music_from_album_fragment=0x7f03000f;
-        public static final int player=0x7f030010;
-        public static final int player_land=0x7f030011;
-        public static final int playlist_item=0x7f030012;
-        public static final int rounded_corner=0x7f030013;
+        public static final int fragment_search=0x7f03000b;
+        public static final int grid_single_album=0x7f03000c;
+        public static final int group_by_artist_fragment=0x7f03000d;
+        public static final int music_from_album_fragment=0x7f03000e;
+        public static final int player=0x7f03000f;
+        public static final int player_land=0x7f030010;
+        public static final int playlist_item=0x7f030011;
+        public static final int rounded_corner=0x7f030012;
     }
     public static final class menu {
         public static final int album_musics=0x7f080000;

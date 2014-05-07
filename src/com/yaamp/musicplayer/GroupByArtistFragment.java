@@ -40,7 +40,7 @@ public class GroupByArtistFragment extends Fragment {
 		ExpandableListView expandableListView;
 		PlayerControl playerControl=PlayerControl.getInstance();
 		private final int BY_ARTIST_RESULT=5;
-			private MusicDB mdb;
+		private MusicDB mdb;
 			
 			
 		@Override
@@ -52,8 +52,6 @@ public class GroupByArtistFragment extends Fragment {
 			View rootView = inflater.inflate(R.layout.group_by_artist_fragment, container, false);
 			expandableListView=(ExpandableListView) rootView.findViewById(R.id.lvExp);
 
-	
-		
 			return rootView;
 		}
 		@Override
@@ -91,9 +89,9 @@ public class GroupByArtistFragment extends Fragment {
 					intent.putExtra("artistSongs",artistSongs);
 					getActivity().setResult(BY_ARTIST_RESULT,intent);
 					getActivity().finish();
-					playerControl.playMusic(music);
 					
-										return false;
+					
+					return false;
 				}
 			});
 			
