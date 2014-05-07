@@ -42,7 +42,7 @@ import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter;
 import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter.SimpleGestureListener;
 
 /**
- * @author unbounded
+ * @author Zaki
  * 
  */
 public class YaampActivity extends FragmentActivity implements
@@ -188,11 +188,12 @@ public class YaampActivity extends FragmentActivity implements
 		case ALBUM_RESULT:
 			if(data!=null)
 			{
+				Toast.makeText(getApplicationContext(), "Album", Toast.LENGTH_SHORT).show();
+				//String albumName=(String)data.getStringExtra("albumName");
+				//int songIndex=data.getExtras().getInt("songIndex");
 				
-				Music music=(Music)data.getParcelableExtra("musicFromAlbum");
-				ArrayList<Music> albumSongs=data.getParcelableArrayListExtra("albumSongs");
-				musicList=albumSongs;
-				playMusic(music);
+				//musicList=musicDB.getMusicsByColumnNameValue(musicDB.KEY_ALBUM_NAME, albumName);
+				//playMusic(musicList.get(songIndex));
 			}
 			break;
 		
@@ -556,27 +557,9 @@ public class YaampActivity extends FragmentActivity implements
 		songProgressBar.setOnSeekBarChangeListener(this); // Important
 		mp.setOnCompletionListener(this); // Important
 		
-		//musicDB.dropTable();
-		//musicDB.dropMusicDB();
+		
 		SongsManager.createDatabase(getApplicationContext(),MEDIA_PATH);
-		//musicList=musicDB.getAllMusics();
 
-		/**
-		 * Uncomment for database test
-		 * /	
-	
-	musicList=musicDB.getAllMusics();
-			musicDB.dropTable();
-			musicDB.dropMusicDB();
-			
-		
-		
-		
-	
-		/**
-		 * Play button click event plays a song and changes button to pause
-		 * image pauses a song and changes button to play image
-		 * */
 		
 		btnPlay.setOnClickListener(new View.OnClickListener() {
 

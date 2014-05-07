@@ -20,62 +20,56 @@ import android.widget.AdapterView.OnItemClickListener;
 public class AllSongs extends ListFragment {
 	// Songs list
 	Context context;
-		public ArrayList<Music> songsList = new ArrayList<Music>();
-		private final int RESULT_LIST = 3;
-		private MusicDB mdb;
-		// Search EditText
-	    //EditText inputSearch;
+	public ArrayList<Music> songsList = new ArrayList<Music>();
+	private final int RESULT_LIST = 3;
+	private MusicDB mdb;
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, 
-			ViewGroup container,
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		this.context=container.getContext();
-		mdb=new MusicDB(context);
+
+		this.context = container.getContext();
+		mdb = new MusicDB(context);
 		View rootView = inflater.inflate(R.layout.all_musics, container, false);
 
 		return rootView;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 
 		super.onActivityCreated(savedInstanceState);
 		SongsManager plm = new SongsManager();
-		
+
 		plm.execute();
 
-			songsList=mdb.getAllMusics();
-			MusicListAdapter adapter=new MusicListAdapter(context,R.layout.album_music_item, songsList);
-		      
+		songsList = mdb.getAllMusics();
+		MusicListAdapter adapter = new MusicListAdapter(context,
+				R.layout.album_music_item, songsList);
 
 		setListAdapter(adapter);
 		ListView lv = getListView();
-	
+
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, 
-					View view,
-					int position, 
-					long id) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				// getting listitem index
 				int songIndex = position;
-				
+
 				// Starting new intent
-				Intent intent = new Intent(context,YaampActivity.class);
-				
+				Intent intent = new Intent(context, YaampActivity.class);
+
 				// Sending songIndex to PlayerActivity
 				intent.putExtra("songIndex", songIndex);
-			
+
 				getActivity().setResult(RESULT_LIST, intent);
 				// Closing PlayListView
 				getActivity().finish();
 			}
 		});
 
-
 	}
 
-	
-	
 }

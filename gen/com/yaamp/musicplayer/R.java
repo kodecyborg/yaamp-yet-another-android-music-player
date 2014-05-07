@@ -79,18 +79,18 @@ public final class R {
         public static final int action_settings=0x7f090037;
         public static final int albumGridView=0x7f09001d;
         public static final int albumImage=0x7f090001;
-        public static final int albumMusicList=0x7f090028;
-        public static final int albumNameText=0x7f090029;
-        public static final int andPic=0x7f09002b;
+        public static final int albumMusicList=0x7f090022;
+        public static final int albumNameText=0x7f090023;
+        public static final int andPic=0x7f090025;
         public static final int artistName=0x7f090004;
         public static final int bass_boost=0x7f09000c;
         public static final int bass_boost_label=0x7f09000b;
-        public static final int btnBackward=0x7f090024;
-        public static final int btnForward=0x7f090026;
-        public static final int btnNext=0x7f090027;
-        public static final int btnPlay=0x7f090025;
-        public static final int btnPlaylist=0x7f09002f;
-        public static final int btnPrevious=0x7f090023;
+        public static final int btnBackward=0x7f09002c;
+        public static final int btnForward=0x7f09002e;
+        public static final int btnNext=0x7f09002f;
+        public static final int btnPlay=0x7f09002d;
+        public static final int btnPlaylist=0x7f090029;
+        public static final int btnPrevious=0x7f09002b;
         public static final int btnRepeat=0x7f090034;
         public static final int btnShuffle=0x7f090035;
         public static final int container=0x7f090005;
@@ -108,9 +108,9 @@ public final class R {
         public static final int musicTitle=0x7f090003;
         public static final int music_details=0x7f09003b;
         public static final int pager=0x7f090000;
-        public static final int player_footer_bg=0x7f090022;
-        public static final int player_header_bg=0x7f09002c;
-        public static final int relativeLayout1=0x7f09002a;
+        public static final int player_footer_bg=0x7f09002a;
+        public static final int player_header_bg=0x7f090026;
+        public static final int relativeLayout1=0x7f090024;
         public static final int slider_1=0x7f09000e;
         public static final int slider_2=0x7f090010;
         public static final int slider_3=0x7f090012;
@@ -130,11 +130,11 @@ public final class R {
         public static final int songCurrentDurationLabel=0x7f090032;
         public static final int songProgressBar=0x7f090030;
         public static final int songThumbnail=0x7f090036;
-        public static final int songTitle=0x7f09002d;
+        public static final int songTitle=0x7f090027;
         public static final int songTotalDurationLabel=0x7f090033;
         public static final int textInfos=0x7f090002;
         public static final int timerDisplay=0x7f090031;
-        public static final int youtubeBtn=0x7f09002e;
+        public static final int youtubeBtn=0x7f090028;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
