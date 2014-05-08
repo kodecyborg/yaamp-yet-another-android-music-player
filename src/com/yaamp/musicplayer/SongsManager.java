@@ -64,6 +64,7 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 		{
 		return BitmapFactory.decodeByteArray(albumCover, 0, albumCover.length);
 		}
+		else
 		return null;
 	
 		
@@ -145,7 +146,6 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 	
 	
 	public static void createDatabase(Context context,String filePath){
-		
 		MusicDB mdb=new MusicDB(context);	
 		if(!mdb.isTablePresent())
 		{

@@ -188,12 +188,10 @@ public class YaampActivity extends FragmentActivity implements
 		case ALBUM_RESULT:
 			if(data!=null)
 			{
-				Toast.makeText(getApplicationContext(), "Album", Toast.LENGTH_SHORT).show();
-				//String albumName=(String)data.getStringExtra("albumName");
-				//int songIndex=data.getExtras().getInt("songIndex");
-				
-				//musicList=musicDB.getMusicsByColumnNameValue(musicDB.KEY_ALBUM_NAME, albumName);
-				//playMusic(musicList.get(songIndex));
+				String albumName=(String)data.getStringExtra("albumName");
+				int songIndex=data.getExtras().getInt("songIndex");				
+				musicList=musicDB.getMusicsByColumnNameValue(musicDB.KEY_ALBUM_NAME, albumName);
+				playMusic(musicList.get(songIndex));
 			}
 			break;
 		
