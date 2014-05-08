@@ -22,10 +22,9 @@ public class MusicsFromAlbumFragment extends FragmentActivity {
 	private final int ALBUM_RESULT = 6;
 	ListView albumMusicList;
 	ArrayList<Music> albumSongs = new ArrayList<Music>();
-	String albumName = "";
 	MusicDB mdb;
-	TextView textView;
-
+	TextView albumNameTextView;
+	String albumName="";
 	@Override
 	public View onCreateView(String name, Context context, AttributeSet attrs) {
 			
@@ -42,7 +41,7 @@ public class MusicsFromAlbumFragment extends FragmentActivity {
 		
 		
 		
-		textView=(TextView)findViewById(R.id.albumNameText);
+		albumNameTextView=(TextView)findViewById(R.id.albumNameText);
 		setContentView(R.layout.music_from_album_fragment);
 		albumMusicList=(ListView)findViewById(R.id.albumMusicList);	
 		albumName = getIntent().getExtras().getString("albumName");
