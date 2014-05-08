@@ -14,8 +14,10 @@
         </SearchView>
 
         <ListView
+            android:divider="#ffffff"         
             android:id="@android:id/list"
             android:layout_width="fill_parent"
+            android:listSelector="@drawable/list_selector" 
             android:layout_height="wrap_content" >
         </ListView>
 

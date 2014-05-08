@@ -6,6 +6,7 @@ import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.adapters.AlbumsGridViewAdapter;
 import com.yaamp.musicplayer.adapters.MusicListAdapter;
+import com.yaamp.musicplayer.adapters.SimpleMusicListAdapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,25 +18,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SlidingDrawer;
+import android.widget.TextView;
 
 public class GroupByAlbumFragment extends Fragment {
 
 	private Context context;
 	private ListView albumMusicList;
 	private final int ALBUM_RESULT = 6;
-	private Button albumNameButton;
+	private TextView albumNameTxt;
 	private GridView albumGridView;
 	private Bitmap albumCover;
 	private MusicDB mdb;
 	private ArrayList<Music> groups = new ArrayList<Music>();
 	private ArrayList<Music> albumSongs = new ArrayList<Music>();
 	
-	MusicListAdapter albumMusicListAdapter;
+	SimpleMusicListAdapter albumMusicListAdapter;
 	private ImageView albumImage;
 	String albumName;
 	@Override
@@ -49,7 +49,7 @@ public class GroupByAlbumFragment extends Fragment {
 		getAlbums(context);
 		albumMusicList =(ListView)rootView.findViewById(R.id.albumMusicList);	
 		albumGridView = (GridView) rootView.findViewById(R.id.albumGridView);
-		albumNameButton = (Button) rootView.findViewById(R.id.albumName);
+		albumNameTxt = (TextView) rootView.findViewById(R.id.albumName);
 		albumImage=(ImageView)rootView.findViewById(R.id.albumImage);
 		
 		AlbumsGridViewAdapter adapter = new AlbumsGridViewAdapter(context,
@@ -85,10 +85,10 @@ public class GroupByAlbumFragment extends Fragment {
 				
 				albumImage.setImageBitmap(albumCover);
 				
-				albumNameButton.setText(albumName);
+				albumNameTxt.setText(albumName);
 			
-				albumMusicListAdapter = new MusicListAdapter(context,
-						R.layout.album_music_item, albumSongs);
+				albumMusicListAdapter = new SimpleMusicListAdapter(context,
+						R.layout.simple_music_item, albumSongs);
 				albumMusicList.setAdapter(albumMusicListAdapter);
 				
 			}
