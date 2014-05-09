@@ -464,6 +464,27 @@ public ArrayList<Music> getMusicsByColumnNameValueLWC(String columnName,String c
 		return albums;
 
 	}
+	
+public ArrayList<Music> getAlbums() {
+
+		
+		
+		ArrayList<Music> musicArrayList = null;
+
+		ArrayList<Music> albumGroups=new ArrayList<Music>();
+		
+		for (int i = 0; i < getMusicsByAlbum().size(); i++) {
+			musicArrayList = getMusicsByAlbum().get(i).iterator().next();
+			if (getMusicsByAlbum().get(i)!=null) {
+				Music music = musicArrayList.iterator().next();
+				albumGroups.add(i, music);
+
+			}
+		}
+		return albumGroups;
+
+	}
+
 	public void deleteMusic(Music music) {
 		
 		

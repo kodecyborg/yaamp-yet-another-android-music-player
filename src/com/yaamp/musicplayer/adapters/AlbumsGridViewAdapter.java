@@ -30,7 +30,6 @@ public class AlbumsGridViewAdapter extends ArrayAdapter<Music>{
 			ArrayList<Music> albumList) {
 		
 		super(context, layoutRessourceID, albumList);
-		
 		mmr=new MediaMetadataRetriever();
 		this.context=context;
 		this.layoutRessourceID=layoutRessourceID;
@@ -57,9 +56,9 @@ public class AlbumsGridViewAdapter extends ArrayAdapter<Music>{
 		holder = (AlbumViewHolder) row.getTag();
 		}
 		
-		Music item = albumList.get(position);
-		mmr.setDataSource(item.getSongPath());
-		 Bitmap bm ;
+		Music music = albumList.get(position);
+		mmr.setDataSource(music.getSongPath());
+		 Bitmap bm =null;
 		byte[] cover=mmr.getEmbeddedPicture();
 		
 		if(cover!=null){
@@ -70,7 +69,7 @@ public class AlbumsGridViewAdapter extends ArrayAdapter<Music>{
 		{
 			holder.albumImage.setImageDrawable(row.getResources().getDrawable(R.drawable.no_music));
 		}
-		  holder.albumTitle.setText(item.getAlbumName());
+		  holder.albumTitle.setText(music.getAlbumName());
 		return row;
 	}
 
@@ -81,5 +80,6 @@ public class AlbumsGridViewAdapter extends ArrayAdapter<Music>{
 	{ 
 		TextView albumTitle; 
 		ImageView albumImage; }
-
+	
+	
 }

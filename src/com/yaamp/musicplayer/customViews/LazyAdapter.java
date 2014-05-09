@@ -1,4 +1,4 @@
-package com.yaamp.musicplayer.adapters;
+package com.yaamp.musicplayer.customViews;
 
 import java.util.ArrayList;
 
@@ -16,15 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-//ListView
-public class MusicListAdapter extends ArrayAdapter<Music>{
+public class LazyAdapter extends ArrayAdapter<Music> {
 
 	Context context;
 	 int textViewResourceId;    
 	 ArrayList<Music> musics = null;
 	 MediaMetadataRetriever mmr;
 
-	public MusicListAdapter(Context context, int textViewResourceId,
+	public LazyAdapter(Context context, int textViewResourceId,
 			ArrayList<Music> musics) {
 		super(context, textViewResourceId, musics);
 		mmr=new MediaMetadataRetriever();
@@ -34,7 +33,21 @@ public class MusicListAdapter extends ArrayAdapter<Music>{
 	
 	}
 
-	
+	@Override
+	public int getCount() {		
+		return musics.size() ;
+	}
+
+	@Override
+	public Music getItem(int position) {		
+		return musics.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {		
+		return musics.get(position).hashCode();
+	}
+
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
@@ -75,14 +88,13 @@ public class MusicListAdapter extends ArrayAdapter<Music>{
         
         return row;
     }
+
+
 	 static class MusicHolder
 	    {
 	        ImageView albumImage;
 	        TextView txtTitle;
 	        TextView txtArtist;
 	    }
-    
-	
-
 
 }
