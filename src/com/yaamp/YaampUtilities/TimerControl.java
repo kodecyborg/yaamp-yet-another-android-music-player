@@ -1,7 +1,7 @@
-package com.yaamp.musicplayer;
+package com.yaamp.YaampUtilities;
 
 
-public class Utilities {
+public class TimerControl {
 	
 	/**
 	 * Function to convert milliseconds time to

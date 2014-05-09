@@ -2,17 +2,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
  
     <PreferenceCategory android:title="@string/pref_user_profile" >
-        <EditTextPreference
-                android:title="@string/pref_user_name"
-                android:summary="@string/pref_user_name_summary"
-                android:key="prefUsername"/>
+       <!-- To be implemented -->
     </PreferenceCategory>
+              <!-- To be implemented 
        <CheckBoxPreference
             android:defaultValue="false"
             android:key="prefSendReport"
             android:summary="@string/pref_send_report_summary"
             android:title="@string/pref_send_report" >
+           
         </CheckBoxPreference>
+         -->
     <PreferenceCategory android:title="@string/pref_update_setting" >
         <CheckBoxPreference
             android:defaultValue="false"
@@ -20,6 +20,7 @@
             android:summary="@string/enable_gesture_control_summary"
             android:title="@string/enable_gesture_control" >
         </CheckBoxPreference>   
+         <!-- To be implemented 
         <ListPreference
             android:key="prefSyncFrequency"
             android:entries="@array/syncFrequency"
@@ -27,7 +28,7 @@
             android:entryValues="@array/syncFrequencyValues"
             android:title="@string/pref_sync_frequency" />
         
-        
+         -->
     </PreferenceCategory>
  
 </PreferenceScreen>

@@ -2,10 +2,6 @@ package com.yaamp.musicplayer;
 
 import java.util.ArrayList;
 
-import com.yaamp.musicplayer.SongData.Music;
-import com.yaamp.musicplayer.SongData.MusicDB;
-import com.yaamp.musicplayer.adapters.MusicListAdapter;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.SearchView;
+
+import com.yaamp.YaampUtilities.PlayerControl;
+import com.yaamp.musicplayer.SongData.Music;
+import com.yaamp.musicplayer.SongData.MusicDB;
+import com.yaamp.musicplayer.adapters.MusicListAdapter;
 
 public class SearchFragment extends ListFragment implements SearchView.OnQueryTextListener,
 SearchView.OnCloseListener{
@@ -54,9 +54,9 @@ SearchView.OnCloseListener{
 	public void onActivityCreated(Bundle savedInstanceState) {
 
 		super.onActivityCreated(savedInstanceState);
-		SongsManager plm = new SongsManager();
 		
-		plm.execute();
+		
+		
 
 			
 			

@@ -4,24 +4,14 @@ import java.util.ArrayList;
 
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
-import com.yaamp.musicplayer.adapters.MusicListAdapter;
 import com.yaamp.musicplayer.adapters.SimpleMusicListAdapter;
-import com.yaamp.musicplayer.customViews.LazyAdapter;
-import com.yaamp.musicplayer.customViews.LazyListView;
-import com.yaamp.musicplayer.customViews.LazyListView.LazyListener;
-
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;

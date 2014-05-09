@@ -1,9 +1,8 @@
-package com.yaamp.musicplayer;
+package com.yaamp.YaampUtilities;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -28,24 +27,23 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
+import com.yaamp.musicplayer.SongData.MusicDataCacher;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
-public class SongsManager extends AsyncTask<String, Integer, String>{
+public class YaampMediaHelper{
 	// SDCard Path
 	final String MEDIA_PATH = new String(Environment.getExternalStorageDirectory().getPath());
 	private static ArrayList<HashMap<String, String>> xmlSongsList = new ArrayList<HashMap<String, String>>();
 
 	static String XML_OUTPUT_FILE=Environment.getExternalStorageDirectory().getPath()+"/yaamp_sdb.xml";
-
-
+	static String  KEY_ALL_MUSICS="allMusics";
+	static String  KEY_ALBUMS="allAlbums";
 	
 	
 	/**
@@ -144,7 +142,23 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 		createMusicDB( context, filePath,mdb) ;
 	}
 	
-	
+	public static void cacheLibraries(Context context,MusicDB mdb)
+	{
+		try {
+			MusicDataCacher.writeObject(context, KEY_ALL_MUSICS, mdb.getAllMusics());
+			
+		} catch (IOException e) {
+			Log.e("at:YaampMediaHelper: ","Error caching data with key "+KEY_ALL_MUSICS);
+			e.printStackTrace();
+		}
+		
+		try {
+			MusicDataCacher.writeObject(context, KEY_ALBUMS, mdb.getAlbums());
+		} catch (IOException e) {
+			Log.e("Error caching libraries ","Error caching data with key "+KEY_ALBUMS);
+			e.printStackTrace();
+		}
+	}
 	public static void createDatabase(Context context,String filePath){
 		MusicDB mdb=new MusicDB(context);	
 		if(!mdb.isTablePresent())
@@ -152,6 +166,7 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 			try {
 				mdb.createTable();
 				createMusicDB(context,filePath,mdb) ;
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -338,6 +353,9 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 			    }
 		 		return songsList;
 			  }
+	
+	
+	
 	 private static String getValue(String sTag, Element eElement) {
 	
 		   NodeList nlList = eElement.getElementsByTagName(sTag).item(0)
@@ -476,42 +494,76 @@ public class SongsManager extends AsyncTask<String, Integer, String>{
 		
 	}
 	
-	/**
-	 * Class to filter files which are having .mp3 extension
-	 * */
-	class FileExtensionFilter implements FilenameFilter {
-		
 
+
+	
+	String albumName ;
+	String artistName ;
+	String year ;
+	String title;
+	String bitRate ;
+	String trackNumber ;
+	String author ;
+	
+	
+	public static class DurationSplitter
+	{
+		private static long durationLong=0;
+		private static long durationTotal=0;
+		private static long seconds=0;
+		private static long minutes=0;
+		private static long hours=0;
 		
-		public FileExtensionFilter() {
-			super();
+		private static void getDurationTotal(String duration)
+		{
+			if(duration!=null)
+			{
+			durationLong=Long.parseLong(duration);
+			durationTotal = durationLong / 1000;
+			}
 			
-			// TODO Auto-generated constructor stub
 		}
-
-		public boolean accept(File dir, String name) {
+		
+		public static long getHours(String duration){
 			
-			return (name.endsWith(".mp3") || 
-					name.endsWith(".MP3")||
-					name.endsWith(".OGG")|| 
-					name.endsWith(".ogg")|| 
-					name.endsWith(".MP3")|| 
-					name.endsWith(".flac")|| 
-					name.endsWith(".FLAC")||
-					name.endsWith(".aac")|| 
-					name.endsWith(".AAC")|| 
-					name.endsWith(".m4a")|| 
-					name.endsWith(".M4A")|| 
-					name.endsWith(".wma")|| 
-					name.endsWith(".WMA")|| 
-					name.endsWith(".wav"));
+			getDurationTotal(duration);
+			hours=durationTotal / 3600;
+			return hours;
+				
+		}
+		
+		public static long getMinutes(String duration)
+		{
+			getDurationTotal(duration);
+			minutes=(durationTotal - hours * 3600) / 60;
+			return minutes;
+			
+		}
+		
+		public static long getSeconds(String duration)
+		{
+			getDurationTotal(duration);
+			long mns2=(durationTotal - hours * 3600) / 60;
+			seconds= durationTotal - (hours * 3600 + mns2 * 60);
+			return seconds;
+			
+		}
+		
+		public static String getColumnSeparatedDuration(String duration){
+			if(duration==null)
+			return "Not available";
+			else
+			return getHours(duration)+":"+getMinutes(duration)+":"+getMinutes(duration);
+			
+			
+		}
+		public static String getStringSeparatedDuration(String duration){
+			if(duration==null)
+				return "Not available";
+			else
+			return getHours(duration)+" hr "+getMinutes(duration)+" mn "+getSeconds(duration)+" sec ";
+						
 		}
 	}
-	
-	@Override
-	protected String doInBackground(String... params) {
-	
-		
-		return null;
-	}
+
 }

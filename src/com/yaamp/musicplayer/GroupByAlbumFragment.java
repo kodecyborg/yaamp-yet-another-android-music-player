@@ -2,6 +2,7 @@ package com.yaamp.musicplayer;
 
 import java.util.ArrayList;
 
+import com.yaamp.YaampUtilities.YaampMediaHelper;
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.adapters.AlbumsGridViewAdapter;
@@ -121,7 +122,7 @@ public class GroupByAlbumFragment extends Fragment {
 
 	private void getMusicsFromAlbum(int position) {
 		albumName = groups.get(position).getAlbumName();
-		albumCover = SongsManager.getAlbumCover(groups.get(position));
+		albumCover = YaampMediaHelper.getAlbumCover(groups.get(position));
 		albumSongs = mdb.getMusicsByColumnNameValue(mdb.KEY_ALBUM_NAME,
 				albumName);
 

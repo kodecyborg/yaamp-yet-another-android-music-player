@@ -3,34 +3,21 @@ package com.yaamp.musicplayer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.yaamp.YaampUtilities.PlayerControl;
+import com.yaamp.YaampUtilities.YaampMediaHelper;
 import com.yaamp.musicplayer.R;
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.adapters.ArtistExpandableListViewAdapter;
-import com.yaamp.musicplayer.adapters.MusicListAdapter;
-
-import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 public class GroupByArtistFragment extends Fragment {
 	// Songs list
@@ -58,9 +45,9 @@ public class GroupByArtistFragment extends Fragment {
 		public void onActivityCreated(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onActivityCreated(savedInstanceState);
-			SongsManager plm = new SongsManager();
+			YaampMediaHelper plm = new YaampMediaHelper();
 			
-			plm.execute();
+		
 
 				songsList=mdb.getMusicsByArtist();
 				header=new ArrayList<String>(songsList.keySet());

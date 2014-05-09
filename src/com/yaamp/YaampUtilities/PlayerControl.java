@@ -1,4 +1,4 @@
-package com.yaamp.musicplayer;
+package com.yaamp.YaampUtilities;
 
 import java.io.IOException;
 

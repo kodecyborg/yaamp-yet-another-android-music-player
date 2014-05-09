@@ -172,6 +172,7 @@ containing a value of this type.
         public static final int player_footer_bg=0x7f09002b;
         public static final int player_header_bg=0x7f090027;
         public static final int progressBar1=0x7f090025;
+        public static final int scan_musics=0x7f09003f;
         public static final int slider_1=0x7f09000e;
         public static final int slider_2=0x7f090010;
         public static final int slider_3=0x7f090012;
@@ -251,6 +252,7 @@ containing a value of this type.
         public static final int pref_user_name=0x7f070012;
         public static final int pref_user_name_summary=0x7f070013;
         public static final int pref_user_profile=0x7f070016;
+        public static final int scanLibrary=0x7f07001c;
         public static final int search_hint=0x7f07001b;
         public static final int search_label=0x7f07001a;
         public static final int search_setting=0x7f07000d;

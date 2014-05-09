@@ -7,7 +7,6 @@ import com.yaamp.musicplayer.R;
 import com.yaamp.musicplayer.SongData.Music;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;

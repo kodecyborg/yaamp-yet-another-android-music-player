@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -23,7 +24,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +37,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yaamp.YaampUtilities.PlayerControl;
+import com.yaamp.YaampUtilities.TimerControl;
+import com.yaamp.YaampUtilities.YaampMediaHelper;
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.sensormanager.ShakeDetector;
@@ -70,7 +73,7 @@ public class YaampActivity extends FragmentActivity implements
 	public  MediaPlayer mp;
 	// Handler to update UI timer, progress bar etc,.
 	private Handler mHandler = new Handler();;
-	private Utilities utils;
+	private TimerControl utils;
 	private int seekForwardTime = 5000; // 5000 milliseconds
 	private int seekBackwardTime = 5000; // 5000 milliseconds
 	private int currentSongIndex = 0;
@@ -135,11 +138,6 @@ public class YaampActivity extends FragmentActivity implements
 		mSensorManager.unregisterListener(mShakeDetector);
 		super.onPause();
 	}
-
-	/**
-	 * Receiving song index from playlist view and play the song
-	 * Get your extras from data
-	 * */
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -208,7 +206,7 @@ public class YaampActivity extends FragmentActivity implements
 	
 				playerControl.playMusic(music);		
 				
-				Bitmap bm=SongsManager.getAlbumCover(music);
+				Bitmap bm=YaampMediaHelper.getAlbumCover(music);
 				if ( bm!= null){
 					andPic.setImageBitmap(bm);
 				}
@@ -253,7 +251,7 @@ public class YaampActivity extends FragmentActivity implements
 				Music music=musicList.get(songIndex);
 				playerControl.playMusic(music);		
 				
-				Bitmap bm=SongsManager.getAlbumCover(music);
+				Bitmap bm=YaampMediaHelper.getAlbumCover(music);
 				if ( bm!= null){
 					andPic.setImageBitmap(bm);
 				}
@@ -504,6 +502,12 @@ public class YaampActivity extends FragmentActivity implements
 			showDialog();
 
 			break;
+			
+		case R.id.scan_musics:
+			
+			YaampMediaHelper.scanLibrary(this, MEDIA_PATH);
+		
+			break;
 		}
 
 		return true;
@@ -539,7 +543,6 @@ public class YaampActivity extends FragmentActivity implements
 		
 		//Get all music at creation
 		//getParcelableArrayListExtra is gonna fail for big libraries
-	     allMusics=musicDB.getAllMusics();
 		
 		
 		// SharedPreferences sharedPrefs =
@@ -552,14 +555,15 @@ public class YaampActivity extends FragmentActivity implements
 				playerControl=PlayerControl.getInstance();
 				mp = playerControl.getMediaPlayer();
 
-		utils = new Utilities();
+		utils = new TimerControl();
 
 		// Listeners
 		songProgressBar.setOnSeekBarChangeListener(this); // Important
 		mp.setOnCompletionListener(this); // Important
 		
 		
-		SongsManager.createDatabase(getApplicationContext(),MEDIA_PATH);
+		YaampMediaHelper.createDatabase(getApplicationContext(),MEDIA_PATH);
+	    allMusics=musicDB.getAllMusics();
 
 		
 		btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -786,7 +790,7 @@ public class YaampActivity extends FragmentActivity implements
 				"Year: " + year,
 				
 				"Track number: " + trackNumber,
-				"Duration: "+ ID3TagHelper.DurationSplitter.getStringSeparatedDuration(duration),
+				"Duration: "+ YaampMediaHelper.DurationSplitter.getStringSeparatedDuration(duration),
 				"Bitrate: " + bitrateLong + " kb/s", "Type: " + mimeType,
 				"Author: " + author };
 
@@ -795,7 +799,7 @@ public class YaampActivity extends FragmentActivity implements
 				android.R.layout.simple_list_item_1, values);
 
 		AlertDialog.Builder detailsDialogBuilder = new AlertDialog.Builder(this);
-		// Add the buttons
+		// Add the button
 
 		detailsDialogBuilder.setAdapter(itemsAdapter, new OnClickListener() {
 
