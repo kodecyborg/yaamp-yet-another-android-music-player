@@ -147,7 +147,7 @@ public class Music implements Parcelable {
 
 	public String getAlbumName() {
 		if(albumName==null)
-			return "Unknown album name";
+			return "Unknown album";
 		return albumName;
 	}
 
@@ -157,7 +157,7 @@ public class Music implements Parcelable {
 
 	public String getArtistName() {
 		if(artistName==null)
-			return "Unknown artist name";
+			return "Unknown artist";
 		return artistName;
 	}
 

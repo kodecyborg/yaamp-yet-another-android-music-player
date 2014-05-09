@@ -70,7 +70,6 @@ public class MusicDB extends SQLiteOpenHelper{
         // create music table
         db.execSQL(CREATE_MUSIC_TABLE);
         Log.i("Database created",db.getVersion()+"");
-       // new ExportDatabaseFileTask(context, DATABASE_NAME).execute();
         
 	}
 
@@ -81,7 +80,6 @@ public class MusicDB extends SQLiteOpenHelper{
         
         // create fresh musics table
         this.onCreate(db);
-       // new ExportDatabaseFileTask(context, DATABASE_NAME).execute();
 
 	
 	}
@@ -125,16 +123,16 @@ public class MusicDB extends SQLiteOpenHelper{
 		try {
 			ContentValues values = new ContentValues();
 			values.put(KEY_SONG_PATH, musicMap.get(KEY_SONG_PATH));
-			values.put(KEY_FILE_NAME, musicMap.get(KEY_FILE_NAME)); // get title 
-			values.put(KEY_SONG_TITLE, musicMap.get(KEY_SONG_TITLE)); // get title 
-			values.put(KEY_FILE_DIRECTORY, musicMap.get(KEY_FILE_DIRECTORY)); // get author
-			values.put(KEY_ALBUM_NAME, musicMap.get(KEY_ALBUM_NAME)); // get author
-			values.put(KEY_ARTIST_NAME, musicMap.get(KEY_ARTIST_NAME)); // get author
-			values.put(KEY_YEAR, musicMap.get(KEY_YEAR)); // get author
-			values.put(KEY_BITRATE, musicMap.get(KEY_BITRATE)); // get author
-			values.put(KEY_DURATION, musicMap.get(KEY_DURATION)); // get author
-			values.put(KEY_TRACK_NUMBER, musicMap.get(KEY_TRACK_NUMBER)); // get author
-			values.put(KEY_AUTHOR, musicMap.get(KEY_AUTHOR)); // get author
+			values.put(KEY_FILE_NAME, musicMap.get(KEY_FILE_NAME)); 
+			values.put(KEY_SONG_TITLE, musicMap.get(KEY_SONG_TITLE)); 
+			values.put(KEY_FILE_DIRECTORY, musicMap.get(KEY_FILE_DIRECTORY)); 
+			values.put(KEY_ALBUM_NAME, musicMap.get(KEY_ALBUM_NAME)); 
+			values.put(KEY_ARTIST_NAME, musicMap.get(KEY_ARTIST_NAME)); 
+			values.put(KEY_YEAR, musicMap.get(KEY_YEAR));
+			values.put(KEY_BITRATE, musicMap.get(KEY_BITRATE));
+			values.put(KEY_DURATION, musicMap.get(KEY_DURATION));
+			values.put(KEY_TRACK_NUMBER, musicMap.get(KEY_TRACK_NUMBER));
+			values.put(KEY_AUTHOR, musicMap.get(KEY_AUTHOR));
 			values.put(KEY_MIME_TYPE, musicMap.get(KEY_MIME_TYPE));
 
 			db.insert(TABLE_NAME, null, values);
@@ -144,7 +142,6 @@ public class MusicDB extends SQLiteOpenHelper{
 		}finally{
 	
 		db.close();
-       // new ExportDatabaseFileTask(context, DATABASE_NAME).execute();
 
 		}
 		}
@@ -158,16 +155,16 @@ public class MusicDB extends SQLiteOpenHelper{
 			ContentValues values = new ContentValues();
 			values.put(KEY_SONG_PATH, music.getSongPath());
 			values.put(KEY_FILE_NAME, music.getSongFileName());
-			values.put(KEY_SONG_TITLE, music.getSongTitle()); // get title 
-			values.put(KEY_FILE_DIRECTORY, music.getFileDirectory()); // get author
-			values.put(KEY_ALBUM_NAME, music.getAlbumName()); // get author
-			values.put(KEY_ARTIST_NAME, music.getArtistName()); // get author
-			values.put(KEY_YEAR, music.getYear()); // get author
+			values.put(KEY_SONG_TITLE, music.getSongTitle()); 
+			values.put(KEY_FILE_DIRECTORY, music.getFileDirectory()); 
+			values.put(KEY_ALBUM_NAME, music.getAlbumName()); 
+			values.put(KEY_ARTIST_NAME, music.getArtistName()); 
+			values.put(KEY_YEAR, music.getYear()); 
 			
-			values.put(KEY_BITRATE, music.getBitRate()); // get author
-			values.put(KEY_DURATION, music.getDuration()); // get author
-			values.put(KEY_TRACK_NUMBER, music.getTrackNumber()); // get author
-			values.put(KEY_AUTHOR, music.getAuthor()); // get author
+			values.put(KEY_BITRATE, music.getBitRate());
+			values.put(KEY_DURATION, music.getDuration());
+			values.put(KEY_TRACK_NUMBER, music.getTrackNumber()); 
+			values.put(KEY_AUTHOR, music.getAuthor());
 			values.put(KEY_MIME_TYPE, music.getMimeType());
 			
 			db.insert(TABLE_NAME, null, values);
@@ -178,7 +175,6 @@ public class MusicDB extends SQLiteOpenHelper{
 		finally{
 		db.close();
 		
-       // new ExportDatabaseFileTask(context, DATABASE_NAME).execute();
 
 		}
 	}
@@ -206,10 +202,12 @@ public class MusicDB extends SQLiteOpenHelper{
 				music.setAlbumName(cursor.getString(5));
 				music.setArtistName(cursor.getString(6));
 				music.setYear(cursor.getString(7));				
+				
 				music.setBitRate(cursor.getString(8));
-				music.setTrackNumber(cursor.getString(9));
-				music.setAuthor(cursor.getString(10));
-				music.setMimeType(cursor.getString(11));
+				music.setDuration(cursor.getString(9));
+				music.setTrackNumber(cursor.getString(10));
+				music.setAuthor(cursor.getString(11));
+				music.setMimeType(cursor.getString(12));
 				
 				musics.add(music);
 			
@@ -285,10 +283,12 @@ public class MusicDB extends SQLiteOpenHelper{
 				music.setAlbumName(cursor.getString(5));
 				music.setArtistName(cursor.getString(6));
 				music.setYear(cursor.getString(7));				
+				
 				music.setBitRate(cursor.getString(8));
-				music.setTrackNumber(cursor.getString(9));
-				music.setAuthor(cursor.getString(10));
-				music.setMimeType(cursor.getString(11));
+				music.setDuration(cursor.getString(9));
+				music.setTrackNumber(cursor.getString(10));
+				music.setAuthor(cursor.getString(11));
+				music.setMimeType(cursor.getString(12));
 				
 				musics.add(music);
 			
@@ -316,9 +316,9 @@ public 	ArrayList<Music> searchMusics(String value)
 {
 	Set<Music> resultNoDuplicates=new HashSet<Music>();
 	
-	Set<Music> artistName =new HashSet<Music>(getMusicsByColumnNameValueLWC(KEY_ARTIST_NAME, value));
-	Set<Music> albumName=new HashSet<Music>(getMusicsByColumnNameValueLWC(KEY_ALBUM_NAME, value));
-	Set<Music> songTitle=new HashSet<Music>(getMusicsByColumnNameValueLWC(KEY_SONG_TITLE, value));
+	Set<Music> artistName =new HashSet<Music>(getMusicsByColumnNameValueWC(KEY_ARTIST_NAME, value));
+	Set<Music> albumName=new HashSet<Music>(getMusicsByColumnNameValueWC(KEY_ALBUM_NAME, value));
+	Set<Music> songTitle=new HashSet<Music>(getMusicsByColumnNameValueWC(KEY_SONG_TITLE, value));
 	
 	resultNoDuplicates.addAll(artistName);
 	resultNoDuplicates.addAll(albumName);
@@ -329,7 +329,7 @@ public 	ArrayList<Music> searchMusics(String value)
 }
 	
 //Search with sql like wildcard	
-public ArrayList<Music> getMusicsByColumnNameValueLWC(String columnName,String columnValue) {
+public ArrayList<Music> getMusicsByColumnNameValueWC(String columnName,String columnValue) {
 		
 		ArrayList<Music> musics =new ArrayList<Music>();
 		Cursor cursor=null;
@@ -359,9 +359,11 @@ public ArrayList<Music> getMusicsByColumnNameValueLWC(String columnName,String c
 				music.setArtistName(cursor.getString(6));
 				music.setYear(cursor.getString(7));
 				music.setBitRate(cursor.getString(8));
-				music.setTrackNumber(cursor.getString(9));
-				music.setAuthor(cursor.getString(10));
-				music.setMimeType(cursor.getString(11));
+				
+				music.setDuration(cursor.getString(9));
+				music.setTrackNumber(cursor.getString(10));
+				music.setAuthor(cursor.getString(11));
+				music.setMimeType(cursor.getString(12));
 				
 				musics.add(music);
 			
@@ -418,7 +420,6 @@ public ArrayList<Music> getMusicsByColumnNameValueLWC(String columnName,String c
 			db.close();
 			if(cursor!=null)
 			cursor.close();
-	      //  new ExportDatabaseFileTask(context, DATABASE_NAME).execute();
 
 		}
 		return artists;
@@ -503,7 +504,6 @@ public ArrayList<Music> getAlbums() {
 		}
 		finally{
 			db.close();
-	      //  new ExportDatabaseFileTask(context, DATABASE_NAME).execute();
 
 		}
 		

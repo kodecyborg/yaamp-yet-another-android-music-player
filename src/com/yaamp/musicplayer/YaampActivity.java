@@ -6,6 +6,7 @@ package com.yaamp.musicplayer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +23,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +36,7 @@ import android.widget.ListAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.sensormanager.ShakeDetector;
@@ -775,23 +778,21 @@ public class YaampActivity extends FragmentActivity implements
 			bitrateLong = Long.parseLong(bitrate) / 1000 + "";
 		else
 			bitrateLong = "Unknown";
-
+		
 		String[] values = {
 				"Title: " + title,
 				"Artist: " + artistName,
 				"Album: " + albumName,
 				"Year: " + year,
+				
 				"Track number: " + trackNumber,
-				"Duration: "
-						+ ID3TagHelper.DurationSplitter
-								.getStringSeparatedDuration(duration),
+				"Duration: "+ ID3TagHelper.DurationSplitter.getStringSeparatedDuration(duration),
 				"Bitrate: " + bitrateLong + " kb/s", "Type: " + mimeType,
 				"Author: " + author };
 
 		ListAdapter itemsAdapter = new ArrayAdapter<String>(
 				this.getApplicationContext(),
 				android.R.layout.simple_list_item_1, values);
-		// detailsListView.setAdapter(itemsAdapter);
 
 		AlertDialog.Builder detailsDialogBuilder = new AlertDialog.Builder(this);
 		// Add the buttons
@@ -800,7 +801,7 @@ public class YaampActivity extends FragmentActivity implements
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
+				//Just dismiss
 
 			}
 		});
