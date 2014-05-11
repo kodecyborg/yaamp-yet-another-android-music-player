@@ -24,7 +24,6 @@ public class AlbumsGridViewAdapter extends ArrayAdapter<Music>{
 	ArrayList<Music> albumList;
 	MediaMetadataRetriever mmr;
 
-
 	public AlbumsGridViewAdapter(Context context, 
 			int layoutRessourceID,
 			ArrayList<Music> albumList) {

@@ -1,10 +1,17 @@
 package com.yaamp.musicplayer.SongData;
 
+import java.io.Serializable;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Music implements Parcelable {
+public class Music implements Parcelable, Serializable{
 
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2083778600838832159L;
 	private long id;
 	private String songPath;
 	private String songFileName;
@@ -49,6 +56,7 @@ public class Music implements Parcelable {
 	public static final Parcelable.Creator<Music> 
 	CREATOR = new Parcelable.Creator<Music>() {
 
+		@Override
 		public Music createFromParcel(Parcel in) {
 			Music music=new Music();
 			music.id = in.readLong();
@@ -67,6 +75,7 @@ public class Music implements Parcelable {
 			return music;
 		}
 
+		@Override
 		public Music[] newArray(int size) {
 			return new Music[size];
 		}
@@ -177,7 +186,7 @@ public class Music implements Parcelable {
 
 	public String getBitRate() {
 		if(bitRate==null)
-			return "-1";
+			return "Unknown bitrate";
 		return bitRate;
 	}
 
@@ -187,7 +196,7 @@ public class Music implements Parcelable {
 
 	public String getDuration() {
 		if(duration==null)
-			return "0";
+			return "Unknown duration";
 		return duration;
 	}
 
@@ -197,7 +206,7 @@ public class Music implements Parcelable {
 
 	public String getTrackNumber() {
 		if(trackNumber==null)
-			return "-1";
+			return "Unknown track number";
 		return trackNumber;
 	}
 

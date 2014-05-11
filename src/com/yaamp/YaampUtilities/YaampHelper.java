@@ -36,15 +36,12 @@ import android.media.MediaMetadataRetriever;
 import android.os.Environment;
 import android.util.Log;
 
-public class YaampMediaHelper{
+public class YaampHelper{
 	// SDCard Path
-	final String MEDIA_PATH = new String(Environment.getExternalStorageDirectory().getPath());
+	public static final String MEDIA_PATH = Environment.getExternalStorageDirectory().getPath();
 	private static ArrayList<HashMap<String, String>> xmlSongsList = new ArrayList<HashMap<String, String>>();
 
 	static String XML_OUTPUT_FILE=Environment.getExternalStorageDirectory().getPath()+"/yaamp_sdb.xml";
-	static String  KEY_ALL_MUSICS="allMusics";
-	static String  KEY_ALBUMS="allAlbums";
-	
 	
 	/**
 	 * Function to read all mp3 files from sdcard
@@ -72,12 +69,14 @@ public class YaampMediaHelper{
 	private static void createMusicDB(Context context,String filePath,MusicDB mdb) {
 	
 		
+		
 		File home = new File(filePath);
 		File[] files=home.listFiles();
 		MediaMetadataRetriever mmr=new MediaMetadataRetriever();
 		
 		//mdb.dropMusicDB();
 		Music music=null;
+		
 		for(File f:files)
 		{
 			if(f.isDirectory())
@@ -92,6 +91,8 @@ public class YaampMediaHelper{
 						f.getName().endsWith(".wma")|| 						
 						f.getName().endsWith(".WMA")||
 						f.getName().endsWith(".m4a")|| 
+						f.getName().endsWith(".OGG")||
+						f.getName().endsWith(".ogg")|| 
 						f.getName().endsWith(".M4A")
 						
 						){
@@ -132,48 +133,68 @@ public class YaampMediaHelper{
 			
 			}
 				}
-		}}
+		}
+	}
 		
 	
 	public static void scanLibrary(Context context,String filePath)
 	{
 		MusicDB mdb=new MusicDB(context);
-		mdb.dropTable();
-		createMusicDB( context, filePath,mdb) ;
+		//mdb.dropTable();
+		
+		//mdb.createTable();
+		
+		//createMusicDB( context, filePath,mdb) ;
+		cacheLibrary(context, mdb);
 	}
 	
-	public static void cacheLibraries(Context context,MusicDB mdb)
+	private static void cacheLibrary(Context context,MusicDB mdb)
 	{
 		try {
-			MusicDataCacher.writeObject(context, KEY_ALL_MUSICS, mdb.getAllMusics());
+			MusicDataCacher.writeObject(context, MusicDataCacher.KEY_ALL_MUSICS,mdb.getAllMusics());
 			
 		} catch (IOException e) {
-			Log.e("at:YaampMediaHelper: ","Error caching data with key "+KEY_ALL_MUSICS);
+			Log.e("Yaamp Caching Error: ","Error caching data with key "+MusicDataCacher.KEY_ALL_MUSICS);
 			e.printStackTrace();
 		}
 		
 		try {
-			MusicDataCacher.writeObject(context, KEY_ALBUMS, mdb.getAlbums());
+			MusicDataCacher.writeObject(context, MusicDataCacher.KEY_ALBUMS, mdb.getAlbums());
 		} catch (IOException e) {
-			Log.e("Error caching libraries ","Error caching data with key "+KEY_ALBUMS);
+			Log.e("Yaamp Caching Error: ","Error caching data with key "+MusicDataCacher.KEY_ALBUMS);
 			e.printStackTrace();
 		}
 	}
+	
+	public static void cacheCurrentPlayList(Context context,ArrayList<Music> musics)
+	{
+		try {
+			MusicDataCacher.writeObject(context, MusicDataCacher.KEY_CURRENT_PLAYLIST,musics);
+		} catch (IOException e) {
+			Log.e("Yaamp Caching Error: ","Error caching data with key "+MusicDataCacher.KEY_ALBUMS);
+			e.printStackTrace();
+		}
+
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static void createDatabase(Context context,String filePath){
 		MusicDB mdb=new MusicDB(context);	
-		if(!mdb.isTablePresent())
+		ArrayList<Music> allMusics =(ArrayList<Music>) MusicDataCacher.readObject(context,MusicDataCacher.KEY_ALL_MUSICS);;
+		if(!mdb.isTablePresent()||allMusics==null)
 		{
 			try {
 				mdb.createTable();
 				createMusicDB(context,filePath,mdb) ;
-				
+				cacheLibrary(context, mdb);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				Log.e("Yaamp Database Error: ","Error creating database with name "+mdb.getDatabaseName());
 				e.printStackTrace();
 			}
 		}
 
 	}
+	
 
 	public static ArrayList<HashMap<String, String>> pullParse(String xmlPath)
 	{
@@ -362,7 +383,7 @@ public class YaampMediaHelper{
 	
 		     .getChildNodes();
 
-		   Node nValue = (Node) nlList.item(0);
+		   Node nValue = nlList.item(0);
 
 		   return nValue.getNodeValue();
 		  }
@@ -494,19 +515,8 @@ public class YaampMediaHelper{
 		
 	}
 	
-
-
 	
-	String albumName ;
-	String artistName ;
-	String year ;
-	String title;
-	String bitRate ;
-	String trackNumber ;
-	String author ;
-	
-	
-	public static class DurationSplitter
+	public static class Metadata
 	{
 		private static long durationLong=0;
 		private static long durationTotal=0;
@@ -549,8 +559,50 @@ public class YaampMediaHelper{
 			
 		}
 		
+		public static String[] getMetadataStringArray(Music music)
+		{
+			
+			try {
+				if(music !=null){
+				String bitrateLong = null;
+				
+				String albumName = music.getAlbumName();
+				String artistName = music.getArtistName();
+				String year = music.getYear();
+				String title =music.getSongTitle();
+				String bitrate = music.getBitRate();
+				String duration =music.getDuration();
+				String trackNumber = music.getTrackNumber();
+				String author =music.getAuthor();
+				String mimeType = music.getMimeType();
+				
+				if (bitrate != "Unknown bitrate")
+					bitrateLong = Long.parseLong(bitrate) / 1000 + "";
+				
+				String[] values={
+						"Title: " + title,
+						"Artist: " + artistName,
+						"Album: " + albumName,
+						"Year: " + year,					
+						"Track number: " + trackNumber,
+						"Duration: "+ getStringSeparatedDuration(duration),
+						"Bitrate: " + bitrateLong + " kb/s", "Type: " + mimeType,
+						"Author: " + author };
+				return values;}
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch(NullPointerException e)
+			{
+				e.printStackTrace();
+			}
+			return null;
+			
+		}
+		
 		public static String getColumnSeparatedDuration(String duration){
-			if(duration==null)
+			if(duration=="-1")
 			return "Not available";
 			else
 			return getHours(duration)+":"+getMinutes(duration)+":"+getMinutes(duration);
@@ -558,12 +610,16 @@ public class YaampMediaHelper{
 			
 		}
 		public static String getStringSeparatedDuration(String duration){
-			if(duration==null)
+			if(duration=="-1")
 				return "Not available";
 			else
 			return getHours(duration)+" hr "+getMinutes(duration)+" mn "+getSeconds(duration)+" sec ";
 						
 		}
 	}
+	
+	
+	
+
 
 }

@@ -6,9 +6,7 @@ package com.yaamp.musicplayer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -20,11 +18,9 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -39,9 +35,11 @@ import android.widget.Toast;
 
 import com.yaamp.YaampUtilities.PlayerControl;
 import com.yaamp.YaampUtilities.TimerControl;
-import com.yaamp.YaampUtilities.YaampMediaHelper;
+import com.yaamp.YaampUtilities.YaampHelper;
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
+import com.yaamp.musicplayer.SongData.MusicDataCacher;
+import com.yaamp.musicplayer.SongData.SharedPreferenceManager;
 import com.yaamp.musicplayer.sensormanager.ShakeDetector;
 import com.yaamp.musicplayer.sensormanager.ShakeDetector.OnShakeListener;
 import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter;
@@ -70,7 +68,7 @@ public class YaampActivity extends FragmentActivity implements
 	private TextView songCurrentDurationLabel;
 	private TextView songTotalDurationLabel;
 	// Media Player
-	public  MediaPlayer mp;
+	public  MediaPlayer mediaPlayer;
 	// Handler to update UI timer, progress bar etc,.
 	private Handler mHandler = new Handler();;
 	private TimerControl utils;
@@ -83,13 +81,12 @@ public class YaampActivity extends FragmentActivity implements
 	private ArrayList<Music> musicList = new ArrayList<Music>();
 	private MusicDB musicDB=new MusicDB(this);
 	private ArrayList<Music> allMusics=new ArrayList<Music>();
-	final String MEDIA_PATH = Environment.getExternalStorageDirectory()
-			.getPath();
+			
 	// The following are used for the shake detection
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 	private ShakeDetector mShakeDetector;
-	private SimpleGestureFilter detector;
+	private SimpleGestureFilter mSimpleGestureFilter;
 	private boolean isGestureEnabled = true;
 	
 	private final int RESULT_SETTINGS = 1;	
@@ -98,7 +95,7 @@ public class YaampActivity extends FragmentActivity implements
 	private final int RESULT_SEARCH=4;
 	private final int BY_ARTIST_RESULT=5;
 	private final int ALBUM_RESULT=6;
-	
+	private SharedPreferenceManager sharedPrefManager;
 	private String albumName = "";
 	private String artistName = "";
 	private String title = "";
@@ -132,13 +129,7 @@ public class YaampActivity extends FragmentActivity implements
 				SensorManager.SENSOR_DELAY_UI);
 	}
 
-	@Override
-	public void onPause() {
-		// Unregister the Sensor Manager onPause
-		mSensorManager.unregisterListener(mShakeDetector);
-		super.onPause();
-	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -158,8 +149,9 @@ public class YaampActivity extends FragmentActivity implements
 			if (data != null) 
 			{
 				currentSongIndex = data.getExtras().getInt("songIndex");	
-				musicList.clear();
-		      	musicList.addAll(allMusics);
+				
+				musicList=allMusics;
+		      	
 				playMusic(musicList.get(currentSongIndex));
 			}
 			break;
@@ -189,7 +181,7 @@ public class YaampActivity extends FragmentActivity implements
 		case ALBUM_RESULT:
 			if(data!=null)
 			{
-				String albumName=(String)data.getStringExtra("albumName");
+				String albumName=data.getStringExtra("albumName");
 				int songIndex=data.getExtras().getInt("songIndex");				
 				musicList=musicDB.getMusicsByColumnNameValue(musicDB.KEY_ALBUM_NAME, albumName);
 				playMusic(musicList.get(songIndex));
@@ -197,36 +189,48 @@ public class YaampActivity extends FragmentActivity implements
 			break;
 		
 		}
+		
+		YaampHelper.cacheCurrentPlayList(this, musicList);
+		
+		
 
 	}
 
+	public void setPlayerView(Music music)
+	{
+		Bitmap bm=YaampHelper.getAlbumCover(music);
+		if ( bm!= null){
+			andPic.setImageBitmap(bm);
+		}
+		else
+		andPic.setImageDrawable(getResources().getDrawable(R.drawable.no_music));
+		albumName = music.getAlbumName();
+		artistName = music.getArtistName();
+		title = music.getSongTitle();
+
+		songTitleLabel.setText("Title: " + title + " - Artist: "
+				+ artistName + " - Album: " + albumName);
+
+		
+		
+
+		// set Progress bar values
+		songProgressBar.setProgress(0);
+		songProgressBar.setMax(100);
+
+		// Updating progress bar
+		
+		
+	}
+	
 	public void playMusic(Music music) {
 	
 		try {
 	
 				playerControl.playMusic(music);		
-				
-				Bitmap bm=YaampMediaHelper.getAlbumCover(music);
-				if ( bm!= null){
-					andPic.setImageBitmap(bm);
-				}
-				else
-					andPic.setImageDrawable(getResources().getDrawable(R.drawable.no_music));
-				albumName = music.getAlbumName();
-				artistName = music.getArtistName();
-				title = music.getSongTitle();
-
-				songTitleLabel.setText("Title: " + title + " - Artist: "
-						+ artistName + " - Album: " + albumName);
-
-				// Changing Button Image to pause image
+				setPlayerView(music);
 				btnPlay.setImageResource(R.drawable.btn_pause);
 
-				// set Progress bar values
-				songProgressBar.setProgress(0);
-				songProgressBar.setMax(100);
-
-				// Updating progress bar
 				updateProgressBar();
 			
 		} catch (IllegalArgumentException e) {
@@ -242,7 +246,8 @@ public class YaampActivity extends FragmentActivity implements
 	 * @param songIndex
 	 *            - index of song
 	 * */
-	public void playSong(int songIndex) {
+	
+	public void playSongFromIndex(int songIndex) {
 		// Play song
 		this.songIndex = songIndex;
 		try {
@@ -251,40 +256,9 @@ public class YaampActivity extends FragmentActivity implements
 				Music music=musicList.get(songIndex);
 				playerControl.playMusic(music);		
 				
-				Bitmap bm=YaampMediaHelper.getAlbumCover(music);
-				if ( bm!= null){
-					andPic.setImageBitmap(bm);
-				}
-				else
-					andPic.setImageDrawable(getResources().getDrawable(R.drawable.no_music));
-
-				
-				
-
-				albumName = music.getAlbumName();
-				artistName = music.getArtistName();
-				title = music.getSongTitle();
-
-				if (albumName == null) {
-					albumName = "Unknown album";
-				}
-				if (artistName == null) {
-					artistName = "Unknown artist";
-				}
-				if (title == null) {
-					title = "Unknown title";
-				}
-				songTitleLabel.setText("Title: " + title + " - Artist: "
-						+ artistName + " - Album: " + albumName);
-
+				setPlayerView(music);
 				// Changing Button Image to pause image
 				btnPlay.setImageResource(R.drawable.btn_pause);
-
-				// set Progress bar values
-				songProgressBar.setProgress(0);
-				songProgressBar.setMax(100);
-
-				// Updating progress bar
 				updateProgressBar();
 			}
 		} catch (IllegalArgumentException e) {
@@ -299,17 +273,19 @@ public class YaampActivity extends FragmentActivity implements
 	 * */
 	public void updateProgressBar() {
 		mHandler.postDelayed(mUpdateTimeTask, 100);
+		
 	}
 
-	/**
+	/**---------------------------------------------------------
 	 * Background Runnable thread
 	 * */
 	private Runnable mUpdateTimeTask = new Runnable() {
+		@Override
 		public void run() {
 
 			try {
-				long totalDuration = mp.getDuration();
-				long currentDuration = mp.getCurrentPosition();
+				long totalDuration = mediaPlayer.getDuration();
+				long currentDuration = mediaPlayer.getCurrentPosition();
 
 				// Displaying Total Duration time
 				songTotalDurationLabel.setText(""
@@ -319,7 +295,7 @@ public class YaampActivity extends FragmentActivity implements
 						+ utils.milliSecondsToTimer(currentDuration));
 
 				// Updating progress bar
-				int progress = (int) (utils.getProgressPercentage(
+				int progress = (utils.getProgressPercentage(
 						currentDuration, totalDuration));
 				// Log.d("Progress", ""+progress);
 				songProgressBar.setProgress(progress);
@@ -333,7 +309,7 @@ public class YaampActivity extends FragmentActivity implements
 
 		}
 	};
-
+	
 	/**
 	 * 
 	 * */
@@ -358,12 +334,12 @@ public class YaampActivity extends FragmentActivity implements
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		mHandler.removeCallbacks(mUpdateTimeTask);
-		int totalDuration = mp.getDuration();
+		int totalDuration = mediaPlayer.getDuration();
 		int currentPosition = utils.progressToTimer(seekBar.getProgress(),
 				totalDuration);
 
 		// forward or backward to certain seconds
-		mp.seekTo(currentPosition);
+		mediaPlayer.seekTo(currentPosition);
 
 		// update timer progress again
 		updateProgressBar();
@@ -379,20 +355,20 @@ public class YaampActivity extends FragmentActivity implements
 		// check for repeat is ON or OFF
 		if (isRepeat) {
 			// repeat is on play same song again
-			playSong(currentSongIndex);
+			playSongFromIndex(currentSongIndex);
 		} else if (isShuffle) {
 			// shuffle is on - play a random song
 			Random rand = new Random();
-			currentSongIndex = rand.nextInt((musicList.size() - 1) - 0 + 1) + 0;
-			playSong(currentSongIndex);
+			currentSongIndex = rand.nextInt((musicList.size() - 1)+ 1);
+			playSongFromIndex(currentSongIndex);
 		} else {
 			// no repeat or shuffle ON - play next song
 			if (currentSongIndex < (musicList.size() - 1)) {
-				playSong(currentSongIndex + 1);
+				playSongFromIndex(currentSongIndex + 1);
 				currentSongIndex = currentSongIndex + 1;
 			} else {
 				// play first song
-				playSong(0);
+				playSongFromIndex(0);
 				currentSongIndex = 0;
 			}
 		}
@@ -401,13 +377,13 @@ public class YaampActivity extends FragmentActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mp.release();
+		mediaPlayer.release();
 	}
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent me) {
 		// Call onTouchEvent of SimpleGestureFilter class
-		this.detector.onTouchEvent(me);
+		this.mSimpleGestureFilter.onTouchEvent(me);
 		return super.dispatchTouchEvent(me);
 	}
 
@@ -420,11 +396,11 @@ public class YaampActivity extends FragmentActivity implements
 			case SimpleGestureFilter.SWIPE_RIGHT:
 
 				if (currentSongIndex > 0) {
-					playSong(currentSongIndex - 1);
+					playSongFromIndex(currentSongIndex - 1);
 					currentSongIndex = currentSongIndex - 1;
 				} else {
 					// play last song
-					playSong(musicList.size() - 1);
+					playSongFromIndex(musicList.size() - 1);
 					currentSongIndex = musicList.size() - 1;
 				}
 
@@ -432,11 +408,11 @@ public class YaampActivity extends FragmentActivity implements
 			case SimpleGestureFilter.SWIPE_LEFT:
 				// check if next song is there or not
 				if (currentSongIndex < (musicList.size() - 1)) {
-					playSong(currentSongIndex + 1);
+					playSongFromIndex(currentSongIndex + 1);
 					currentSongIndex = currentSongIndex + 1;
 				} else {
 					// play first song
-					playSong(0);
+					playSongFromIndex(0);
 					currentSongIndex = 0;
 				}
 
@@ -457,7 +433,7 @@ public class YaampActivity extends FragmentActivity implements
 	public void onDoubleTap() {
 		if (isGestureEnabled) {
 			// check for already playing			
-			if (mp.isPlaying()) {
+			if (mediaPlayer.isPlaying()) {
 				// Pause song			
 					playerControl.pause();
 					btnPlay.setImageResource(R.drawable.btn_play);
@@ -499,13 +475,18 @@ public class YaampActivity extends FragmentActivity implements
 
 		case R.id.music_details:
 
-			showDialog();
+			try {
+				showDialog();
+			} catch (IndexOutOfBoundsException e) {
+				Toast.makeText(this, "Select a music fist", Toast.LENGTH_SHORT).show();;
+				e.printStackTrace();
+			}
 
 			break;
 			
 		case R.id.scan_musics:
 			
-			YaampMediaHelper.scanLibrary(this, MEDIA_PATH);
+			YaampHelper.scanLibrary(this, YaampHelper.MEDIA_PATH);
 		
 			break;
 		}
@@ -541,47 +522,36 @@ public class YaampActivity extends FragmentActivity implements
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mShakeDetector = new ShakeDetector();
 		
-		//Get all music at creation
-		//getParcelableArrayListExtra is gonna fail for big libraries
 		
-		
-		// SharedPreferences sharedPrefs =
-		// PreferenceManager.getDefaultSharedPreferences(this);
-
-		showUserSettings();
-		detector = new SimpleGestureFilter(this, this);
-		// All player buttons
-
-				playerControl=PlayerControl.getInstance();
-				mp = playerControl.getMediaPlayer();
+		mSimpleGestureFilter = new SimpleGestureFilter(this, this);
+		playerControl=PlayerControl.getInstance();
+	    mediaPlayer = playerControl.getMediaPlayer();
 
 		utils = new TimerControl();
+		showUserSettings();
 
 		// Listeners
 		songProgressBar.setOnSeekBarChangeListener(this); // Important
-		mp.setOnCompletionListener(this); // Important
+		mediaPlayer.setOnCompletionListener(this); // Important
 		
-		
-		YaampMediaHelper.createDatabase(getApplicationContext(),MEDIA_PATH);
-	    allMusics=musicDB.getAllMusics();
-
-		
+		loadLastState();
+	   
 		btnPlay.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// check for already playing
 				
-				if (mp.isPlaying()) {
-					if (mp != null) {
-						mp.pause();
+				if (mediaPlayer.isPlaying()) {
+					if (mediaPlayer != null) {
+						mediaPlayer.pause();
 						// Changing button image to play button
 						btnPlay.setImageResource(R.drawable.btn_play);
 					}
 				} else {
 					// Resume song
-					if (mp != null) {
-						mp.start();
+					if (mediaPlayer != null) {
+						mediaPlayer.start();
 						// Changing button image to pause button
 						btnPlay.setImageResource(R.drawable.btn_pause);
 					}
@@ -613,7 +583,7 @@ public class YaampActivity extends FragmentActivity implements
 				if (isGestureEnabled) {
 					Random rand = new Random();
 					currentSongIndex = rand.nextInt((musicList.size() - 1) - 0 + 1) + 0;
-					playSong(currentSongIndex);
+					playSongFromIndex(currentSongIndex);
 					Toast.makeText(getApplicationContext(), "Random",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -624,14 +594,14 @@ public class YaampActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// get current song position
-				int currentPosition = mp.getCurrentPosition();
+				int currentPosition = mediaPlayer.getCurrentPosition();
 				// check if seekForward time is lesser than song duration
-				if (currentPosition + seekForwardTime <= mp.getDuration()) {
+				if (currentPosition + seekForwardTime <= mediaPlayer.getDuration()) {
 					// forward song
-					mp.seekTo(currentPosition + seekForwardTime);
+					mediaPlayer.seekTo(currentPosition + seekForwardTime);
 				} else {
 					// forward to end position
-					mp.seekTo(mp.getDuration());
+					mediaPlayer.seekTo(mediaPlayer.getDuration());
 				}
 			}
 		});
@@ -644,14 +614,14 @@ public class YaampActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// get current song position
-				int currentPosition = mp.getCurrentPosition();
+				int currentPosition = mediaPlayer.getCurrentPosition();
 				// check if seekBackward time is greater than 0 sec
 				if (currentPosition - seekBackwardTime >= 0) {
 					// forward song
-					mp.seekTo(currentPosition - seekBackwardTime);
+					mediaPlayer.seekTo(currentPosition - seekBackwardTime);
 				} else {
 					// backward to starting position
-					mp.seekTo(0);
+					mediaPlayer.seekTo(0);
 				}
 
 			}
@@ -667,11 +637,11 @@ public class YaampActivity extends FragmentActivity implements
 			public void onClick(View arg0) {
 				// check if next song is there or not
 				if (currentSongIndex < (musicList.size() - 1)) {
-					playSong(currentSongIndex + 1);
+					playSongFromIndex(currentSongIndex + 1);
 					currentSongIndex = currentSongIndex + 1;
 				} else {
 					// play first song
-					playSong(0);
+					playSongFromIndex(0);
 					currentSongIndex = 0;
 				}
 
@@ -686,11 +656,11 @@ public class YaampActivity extends FragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 				if (currentSongIndex > 0) {
-					playSong(currentSongIndex - 1);
+					playSongFromIndex(currentSongIndex - 1);
 					currentSongIndex = currentSongIndex - 1;
 				} else {
 					// play last song
-					playSong(musicList.size() - 1);
+					playSongFromIndex(musicList.size() - 1);
 					currentSongIndex = musicList.size() - 1;
 				}
 
@@ -766,37 +736,14 @@ public class YaampActivity extends FragmentActivity implements
 	}
 
 	private void showDialog() {
-		String bitrateLong = "Unknown";
-		LayoutInflater inflater = getLayoutInflater();
-		String albumName = musicList.get(songIndex).getAlbumName();
-		String artistName = musicList.get(songIndex).getArtistName();
-		String year = musicList.get(songIndex).getYear();
-		String title = musicList.get(songIndex).getSongTitle();
-		String bitrate = musicList.get(songIndex).getBitRate();
-		String duration = musicList.get(songIndex).getDuration();
-		String trackNumber = musicList.get(songIndex).getTrackNumber();
-		String author = musicList.get(songIndex).getAuthor();
-		String mimeType = musicList.get(songIndex).getMimeType();
-
-		if (bitrate != null)
-			bitrateLong = Long.parseLong(bitrate) / 1000 + "";
-		else
-			bitrateLong = "Unknown";
 		
-		String[] values = {
-				"Title: " + title,
-				"Artist: " + artistName,
-				"Album: " + albumName,
-				"Year: " + year,
-				
-				"Track number: " + trackNumber,
-				"Duration: "+ YaampMediaHelper.DurationSplitter.getStringSeparatedDuration(duration),
-				"Bitrate: " + bitrateLong + " kb/s", "Type: " + mimeType,
-				"Author: " + author };
+		
+		
+		String[] val=YaampHelper.Metadata.getMetadataStringArray(musicList.get(songIndex));
 
 		ListAdapter itemsAdapter = new ArrayAdapter<String>(
 				this.getApplicationContext(),
-				android.R.layout.simple_list_item_1, values);
+				android.R.layout.simple_list_item_1, val);
 
 		AlertDialog.Builder detailsDialogBuilder = new AlertDialog.Builder(this);
 		// Add the button
@@ -810,9 +757,10 @@ public class YaampActivity extends FragmentActivity implements
 			}
 		});
 
-		detailsDialogBuilder.setView(inflater.inflate(R.layout.details, null))
+		detailsDialogBuilder.setView(getLayoutInflater().inflate(R.layout.details, null))
 				.setNegativeButton("Dismiss",
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								//Just dismiss the dialog
 							}
@@ -822,6 +770,47 @@ public class YaampActivity extends FragmentActivity implements
 		alertDialog.show();
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void loadLastState(){
+		
+		YaampHelper.createDatabase(this,YaampHelper.MEDIA_PATH);
+		 sharedPrefManager=new SharedPreferenceManager(this);
 
+	    try {
 
-}
+		    allMusics=(ArrayList<Music>) MusicDataCacher.readObject(this,MusicDataCacher.KEY_ALL_MUSICS);
+
+		    musicList=(ArrayList<Music>) MusicDataCacher.readObject(this, MusicDataCacher.KEY_CURRENT_PLAYLIST);
+			
+			
+		    currentSongIndex=sharedPrefManager.getLastPlaylistIndex();
+			songIndex=currentSongIndex;
+
+			setPlayerView(musicList.get(songIndex));
+			
+			playerControl.playMusic(musicList.get(songIndex));;
+			mediaPlayer.pause();
+	    } catch (Exception e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		// Unregister the Sensor Manager onPause
+		mSensorManager.unregisterListener(mShakeDetector);
+		 sharedPrefManager=new SharedPreferenceManager(this);
+
+			sharedPrefManager.setLastPlaylistIndex(currentSongIndex);
+		
+		super.onPause();
+	}
+
+	
+	
+		
+	}
+	
+

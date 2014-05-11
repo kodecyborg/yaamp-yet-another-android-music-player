@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,7 @@ SearchView.OnCloseListener{
 					int position, 
 					long id) {
 				Intent intent=new Intent(context,YaampActivity.class);				
-				intent.putExtra("musicFromSearch",songsList.get(position));
+				intent.putExtra("musicFromSearch",(Parcelable)songsList.get(position));
 				getActivity().setResult(SEARCH_RESULT,intent);
 				getActivity().finish();
 			}

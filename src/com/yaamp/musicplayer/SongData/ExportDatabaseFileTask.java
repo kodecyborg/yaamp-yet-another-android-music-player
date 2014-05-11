@@ -25,13 +25,15 @@ public class ExportDatabaseFileTask extends AsyncTask<String, Void, Boolean> {
 	} 
 
 		// can use UI thread here
-        protected void onPreExecute() {
+        @Override
+		protected void onPreExecute() {
           Toast.makeText(context, "Exporting database", Toast.LENGTH_LONG).show();
           Log.i("Database export","Exporting database "+dbName+".db");
         }
 
         // automatically done on worker thread (separate from UI thread)
-        protected Boolean doInBackground(final String... args) {
+        @Override
+		protected Boolean doInBackground(final String... args) {
 
         	 try {
            File dbFile =
@@ -56,7 +58,8 @@ public class ExportDatabaseFileTask extends AsyncTask<String, Void, Boolean> {
         }
 
         // can use UI thread here
-        protected void onPostExecute(final Boolean success) {
+        @Override
+		protected void onPostExecute(final Boolean success) {
           
            if (success) {
               Toast.makeText(context, "Export successful!", Toast.LENGTH_SHORT).show();

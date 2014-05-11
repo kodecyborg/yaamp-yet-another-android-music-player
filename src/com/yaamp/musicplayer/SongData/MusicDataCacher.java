@@ -9,7 +9,9 @@ import java.io.ObjectOutputStream;
 import android.content.Context;
 
 public class MusicDataCacher {
-	
+	public static String  KEY_ALL_MUSICS="allMusics";
+	public static String  KEY_ALBUMS="allAlbums";
+	public static String  KEY_CURRENT_PLAYLIST="currentPlaylist";
 	public static void writeObject(Context context, String key, Object object) throws IOException {
 	      FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
 	      ObjectOutputStream oos = new ObjectOutputStream(fos);

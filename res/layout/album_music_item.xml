@@ -14,7 +14,7 @@
             android:layout_gravity="left"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical"
-            android:src="@drawable/adele" />
+            android:src="@drawable/yaamp_head" />
 
         <LinearLayout
             android:id="@+id/textInfos"

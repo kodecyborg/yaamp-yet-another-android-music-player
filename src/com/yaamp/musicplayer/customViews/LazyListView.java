@@ -43,7 +43,7 @@ public class LazyListView extends ListView implements OnScrollListener {
 	public void setLoadingView(int resId) {
 		LayoutInflater inflater = (LayoutInflater) super.getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		footer = (View) inflater.inflate(resId, null);
+		footer = inflater.inflate(resId, null);
 		this.addFooterView(footer);
 
 	}

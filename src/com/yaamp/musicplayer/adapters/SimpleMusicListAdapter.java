@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.yaamp.musicplayer.R;
 import com.yaamp.musicplayer.SongData.Music;
 
+//Generic
 public class SimpleMusicListAdapter extends ArrayAdapter<Music>{
 
 	Context context;

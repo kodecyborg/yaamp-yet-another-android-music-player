@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.yaamp.YaampUtilities.PlayerControl;
-import com.yaamp.YaampUtilities.YaampMediaHelper;
 import com.yaamp.musicplayer.R;
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.adapters.ArtistExpandableListViewAdapter;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,6 @@ public class GroupByArtistFragment extends Fragment {
 		private final int BY_ARTIST_RESULT=5;
 		private MusicDB mdb;
 			
-			
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -45,10 +45,7 @@ public class GroupByArtistFragment extends Fragment {
 		public void onActivityCreated(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onActivityCreated(savedInstanceState);
-			YaampMediaHelper plm = new YaampMediaHelper();
-			
-		
-
+	
 				songsList=mdb.getMusicsByArtist();
 				header=new ArrayList<String>(songsList.keySet());
 				ArtistExpandableListViewAdapter adapter=
@@ -68,11 +65,15 @@ public class GroupByArtistFragment extends Fragment {
 				@Override
 				public boolean onChildClick(ExpandableListView parent, View v,
 						int groupPosition, int childPosition, long id) {
+					
+
+					
+					
 					ArrayList<Music> artistSongs=songsList.get(header.get(groupPosition));
 					Music music=artistSongs.get(childPosition);
 							
 					Intent intent=new Intent(context,YaampActivity.class);				
-					intent.putExtra("musicByArtist",music);
+					intent.putExtra("musicByArtist",(Parcelable)music);
 					intent.putExtra("artistSongs",artistSongs);
 					getActivity().setResult(BY_ARTIST_RESULT,intent);
 					getActivity().finish();

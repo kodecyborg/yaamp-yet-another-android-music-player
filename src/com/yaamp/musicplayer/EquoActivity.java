@@ -209,7 +209,7 @@ public class EquoActivity extends Activity
     @Override
     public void onCheckedChanged (CompoundButton view, boolean isChecked)
     {
-      if (view == (View) enabled)
+      if (view == enabled)
         {
         eq.setEnabled (isChecked);
         }
@@ -221,7 +221,7 @@ public class EquoActivity extends Activity
     @Override
     public void onClick (View view)
     {
-      if (view == (View) flat)
+      if (view == flat)
         {
         setFlat();
         }
@@ -272,7 +272,8 @@ public class EquoActivity extends Activity
       alertDialogBuilder.setPositiveButton (R.string.ok, 
         new DialogInterface.OnClickListener()
           { 
-          public void onClick(DialogInterface dialog, int id) 
+          @Override
+		public void onClick(DialogInterface dialog, int id) 
             {
             }
           });
