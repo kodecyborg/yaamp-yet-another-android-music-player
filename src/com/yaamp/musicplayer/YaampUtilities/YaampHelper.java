@@ -1,4 +1,4 @@
-package com.yaamp.YaampUtilities;
+package com.yaamp.musicplayer.YaampUtilities;
 
 import java.io.File;
 import java.io.FileInputStream;

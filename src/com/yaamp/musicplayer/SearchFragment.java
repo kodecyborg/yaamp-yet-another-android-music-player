@@ -15,9 +15,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.yaamp.YaampUtilities.PlayerControl;
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
+import com.yaamp.musicplayer.YaampUtilities.PlayerControl;
 import com.yaamp.musicplayer.adapters.MusicListAdapter;
 
 public class SearchFragment extends ListFragment implements SearchView.OnQueryTextListener,

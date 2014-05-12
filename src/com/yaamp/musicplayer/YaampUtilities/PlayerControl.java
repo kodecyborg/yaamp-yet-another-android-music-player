@@ -1,13 +1,16 @@
-package com.yaamp.YaampUtilities;
+package com.yaamp.musicplayer.YaampUtilities;
 
 import java.io.IOException;
 
 import android.media.MediaPlayer;
+import android.media.audiofx.BassBoost;
+import android.media.audiofx.Equalizer;
 
 import com.yaamp.musicplayer.SongData.Music;
 
 public class PlayerControl {
-
+	 Equalizer equalizer =null;
+	 BassBoost bassBoost=null;
 	private  MediaPlayer mediaPlayer;
 
 	private static PlayerControl instance = null;
@@ -15,7 +18,16 @@ public class PlayerControl {
 	public MediaPlayer getMediaPlayer() {
 		return mediaPlayer;
 	}
+	
+	public Equalizer getEqualizer()
+	{
+		return equalizer;
+	}
 
+	public BassBoost getBassBoost()
+	{
+		return bassBoost;
+	}
 	public static synchronized PlayerControl getInstance() {
         if (instance == null) {
             instance = new PlayerControl();
@@ -119,5 +131,7 @@ public class PlayerControl {
 	
 	private PlayerControl() { 
         mediaPlayer=new MediaPlayer();
+        equalizer=new Equalizer(0, 0);
+        bassBoost=new BassBoost(0, 0);
 	}
 }

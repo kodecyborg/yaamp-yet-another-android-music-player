@@ -6,6 +6,7 @@ package com.yaamp.musicplayer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,13 +34,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yaamp.YaampUtilities.PlayerControl;
-import com.yaamp.YaampUtilities.TimerControl;
-import com.yaamp.YaampUtilities.YaampHelper;
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.SongData.MusicDataCacher;
 import com.yaamp.musicplayer.SongData.SharedPreferenceManager;
+import com.yaamp.musicplayer.YaampUtilities.PlayerControl;
+import com.yaamp.musicplayer.YaampUtilities.TimerControl;
+import com.yaamp.musicplayer.YaampUtilities.YaampHelper;
 import com.yaamp.musicplayer.sensormanager.ShakeDetector;
 import com.yaamp.musicplayer.sensormanager.ShakeDetector.OnShakeListener;
 import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter;
@@ -49,8 +50,10 @@ import com.yaamp.musicplayer.sensormanager.SimpleGestureFilter.SimpleGestureList
  * @author Zaki
  * 
  */
-public class YaampActivity extends FragmentActivity implements
-		OnCompletionListener, SeekBar.OnSeekBarChangeListener,
+public class YaampActivity extends FragmentActivity 
+implements
+		OnCompletionListener, 
+		SeekBar.OnSeekBarChangeListener,
 		SimpleGestureListener {
 
 	private ImageButton youtubeBtn;
@@ -67,6 +70,7 @@ public class YaampActivity extends FragmentActivity implements
 	private TextView songTitleLabel;
 	private TextView songCurrentDurationLabel;
 	private TextView songTotalDurationLabel;
+	
 	// Media Player
 	public  MediaPlayer mediaPlayer;
 	// Handler to update UI timer, progress bar etc,.
@@ -77,7 +81,7 @@ public class YaampActivity extends FragmentActivity implements
 	private int currentSongIndex = 0;
 	private boolean isShuffle = false;
 	private boolean isRepeat = false;
-	
+
 	private ArrayList<Music> musicList = new ArrayList<Music>();
 	private MusicDB musicDB=new MusicDB(this);
 	private ArrayList<Music> allMusics=new ArrayList<Music>();
@@ -276,39 +280,7 @@ public class YaampActivity extends FragmentActivity implements
 		
 	}
 
-	/**---------------------------------------------------------
-	 * Background Runnable thread
-	 * */
-	private Runnable mUpdateTimeTask = new Runnable() {
-		@Override
-		public void run() {
-
-			try {
-				long totalDuration = mediaPlayer.getDuration();
-				long currentDuration = mediaPlayer.getCurrentPosition();
-
-				// Displaying Total Duration time
-				songTotalDurationLabel.setText(""
-						+ utils.milliSecondsToTimer(totalDuration));
-				// Displaying time completed playing
-				songCurrentDurationLabel.setText(""
-						+ utils.milliSecondsToTimer(currentDuration));
-
-				// Updating progress bar
-				int progress = (utils.getProgressPercentage(
-						currentDuration, totalDuration));
-				// Log.d("Progress", ""+progress);
-				songProgressBar.setProgress(progress);
-
-				// Running this thread after 100 milliseconds
-				mHandler.postDelayed(this, 100);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-	};
+	
 	
 	/**
 	 * 
@@ -809,8 +781,55 @@ public class YaampActivity extends FragmentActivity implements
 	}
 
 	
+	/**---------------------------------------------------------
+	 * Background Runnable thread
+	 * */
+	private Runnable mUpdateTimeTask = new Runnable() {
+		@Override
+		public void run() {
+
+			try {
+				long totalDuration = mediaPlayer.getDuration();
+				long currentDuration = mediaPlayer.getCurrentPosition();
+
+				// Displaying Total Duration time
+				songTotalDurationLabel.setText(""
+						+ utils.milliSecondsToTimer(totalDuration));
+				// Displaying time completed playing
+				songCurrentDurationLabel.setText(""
+						+ utils.milliSecondsToTimer(currentDuration));
+
+				// Updating progress bar
+				 progress = (utils.getProgressPercentage(
+						currentDuration, totalDuration));
+				// Log.d("Progress", ""+progress);
+				songProgressBar.setProgress(progress);
+
+				// Running this thread after 100 milliseconds
+				mHandler.postDelayed(this, 100);
+				
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	};
+
+int progress=0;
+
+
+
+
+
+
 	
+
+}
+
+   
 		
-	}
+	
 	
 

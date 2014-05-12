@@ -2,17 +2,19 @@ package com.yaamp.musicplayer;
 
 import java.util.ArrayList;
 
-import com.yaamp.YaampUtilities.YaampHelper;
 import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.SongData.MusicDataCacher;
 import com.yaamp.musicplayer.SongData.SharedPreferenceManager;
+import com.yaamp.musicplayer.YaampUtilities.PlayerControl;
+import com.yaamp.musicplayer.YaampUtilities.YaampHelper;
 import com.yaamp.musicplayer.adapters.AlbumsGridViewAdapter;
 import com.yaamp.musicplayer.adapters.SimpleMusicListAdapter;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class GroupByAlbumFragment extends Fragment {
+public class GroupByAlbumFragment extends Fragment{
 
 	private Context context;
 	private ListView albumMusicList;
@@ -44,8 +46,8 @@ public class GroupByAlbumFragment extends Fragment {
 	private ImageView playPause;
 	String albumName;
 	SharedPreferenceManager sharedPref;
-
-	
+	PlayerControl playerControl;
+	MediaPlayer mp;
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -60,6 +62,8 @@ public class GroupByAlbumFragment extends Fragment {
 	}
 
 
+	
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +86,8 @@ public class GroupByAlbumFragment extends Fragment {
 
 		View rootView = inflater.inflate(R.layout.fragment_albums, container,
 				false);
-
+		playerControl=PlayerControl.getInstance();
+		mp=playerControl.getMediaPlayer();
 		mdb = new MusicDB(context);
 		groups = (ArrayList<Music>) MusicDataCacher.readObject(context, MusicDataCacher.KEY_ALBUMS);
 		albumMusicList = (ListView) rootView.findViewById(R.id.albumMusicList);
@@ -90,7 +95,7 @@ public class GroupByAlbumFragment extends Fragment {
 		albumNameTxt = (TextView) rootView.findViewById(R.id.albumName);
 		albumImage = (ImageView) rootView.findViewById(R.id.albumImage);
 		playPause=(ImageView)rootView.findViewById(R.id.playPause);
-	
+		
 			if(LastalbumPosition!=-1)
 			{
 				getMusicsFromAlbum(LastalbumPosition);
@@ -124,8 +129,17 @@ public class GroupByAlbumFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
+				if(mp.isPlaying()){
+					
 				playPause.setImageResource(R.drawable.img_pause_bottom);
-				
+				mp.pause();
+				}
+				else
+				{
+					playerControl.play();
+					playPause.setImageResource(R.drawable.img_play_bottom);
+
+				}
 			}
 		});
 		
@@ -168,5 +182,11 @@ public class GroupByAlbumFragment extends Fragment {
 		
 
 	}
+
+
+	
+
+
+
 
 }

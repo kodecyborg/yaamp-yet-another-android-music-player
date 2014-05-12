@@ -1,4 +1,4 @@
-package com.yaamp.YaampUtilities;
+package com.yaamp.musicplayer.YaampUtilities;
 
 
 public class TimerControl {

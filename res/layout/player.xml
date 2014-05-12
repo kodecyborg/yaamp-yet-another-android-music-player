@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
+            
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -45,9 +46,10 @@
             android:paddingLeft="10dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
+            
             android:text="Title"
-            android:textColor="#04b3d2"
-            android:textSize="16sp"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <!-- Playlist button -->

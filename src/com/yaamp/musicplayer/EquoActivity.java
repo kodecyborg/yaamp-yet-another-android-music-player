@@ -1,6 +1,8 @@
 package com.yaamp.musicplayer;
 
 import com.yaamp.musicplayer.R;
+import com.yaamp.musicplayer.YaampUtilities.PlayerControl;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.*;
@@ -18,7 +20,7 @@ public class EquoActivity extends Activity
     SeekBar bass_boost = null;
     CheckBox enabled = null;
     Button flat = null;
-
+    PlayerControl playerControl=PlayerControl.getInstance();
     Equalizer eq = null; 
     BassBoost bb = null;
 
@@ -77,7 +79,7 @@ public class EquoActivity extends Activity
         sliders[7] = (SeekBar)findViewById(R.id.slider_8);
         slider_labels[7] = (TextView)findViewById(R.id.slider_label_8);
         
-        eq = new Equalizer (0, 0);
+        eq = playerControl.getEqualizer();
         if (eq != null)
           {
           eq.setEnabled (true);
@@ -99,7 +101,7 @@ public class EquoActivity extends Activity
           slider_labels[i].setVisibility(View.GONE);
           }
 
-        bb = new BassBoost (0, 0);
+        bb = playerControl.getBassBoost();
         if (bb != null)
           {
           }
