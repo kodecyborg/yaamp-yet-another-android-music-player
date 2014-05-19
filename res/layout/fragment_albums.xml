@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
+ 
     android:orientation="vertical" >
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -22,7 +23,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/shape_selector"
             android:paddingTop="0dp" >
 
             <GridView
@@ -95,7 +95,7 @@
                 android:id="@+id/albumMusicList"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:divider="#ffffff"
+                android:divider="#2ECCFA"
                 android:dividerHeight="1dp"
                 android:listSelector="@drawable/list_selector" >
             </ListView>

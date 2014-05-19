@@ -69,7 +69,7 @@ public class MusicListAdapter extends ArrayAdapter<Music>{
 		else{
 			holder.albumImage.setImageDrawable(row.getResources().getDrawable(R.drawable.no_music));
 		}
-        holder.txtTitle.setText(music.getSongTitle());
+        holder.txtTitle.setText(music.getTrackNumber()+"-"+music.getSongTitle());
         holder.txtArtist.setText(music.getArtistName());
         
         

@@ -70,7 +70,6 @@ implements
 	private TextView songTitleLabel;
 	private TextView songCurrentDurationLabel;
 	private TextView songTotalDurationLabel;
-	
 	// Media Player
 	public  MediaPlayer mediaPlayer;
 	// Handler to update UI timer, progress bar etc,.
@@ -113,8 +112,16 @@ implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player);
+	
 		
 		try {
+			/*	To be implemented
+			if(getIntent().getAction().equalsIgnoreCase(Intent.ACTION_VIEW))
+			{
+				Toast.makeText(this, getIntent().getData().getPath()+"", Toast.LENGTH_LONG).show();
+
+			}
+		*/	
 			init();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -244,33 +251,6 @@ implements
 		} 
 	}
 
-	/**
-	 * Function to play a song
-	 * 
-	 * @param songIndex
-	 *            - index of song
-	 * */
-	
-	public void playSongFromIndex(int songIndex) {
-		// Play song
-		this.songIndex = songIndex;
-		try {
-			if (musicList.size() != 0) {
-			
-				Music music=musicList.get(songIndex);
-				playerControl.playMusic(music);		
-				
-				setPlayerView(music);
-				// Changing Button Image to pause image
-				btnPlay.setImageResource(R.drawable.btn_pause);
-				updateProgressBar();
-			}
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} 
-	}
 
 	/**
 	 * Update timer on seekbar
@@ -327,20 +307,22 @@ implements
 		// check for repeat is ON or OFF
 		if (isRepeat) {
 			// repeat is on play same song again
-			playSongFromIndex(currentSongIndex);
+			playMusic(musicList.get(currentSongIndex));
 		} else if (isShuffle) {
 			// shuffle is on - play a random song
 			Random rand = new Random();
 			currentSongIndex = rand.nextInt((musicList.size() - 1)+ 1);
-			playSongFromIndex(currentSongIndex);
+			playMusic(musicList.get(currentSongIndex));
+
 		} else {
 			// no repeat or shuffle ON - play next song
 			if (currentSongIndex < (musicList.size() - 1)) {
-				playSongFromIndex(currentSongIndex + 1);
+			
+				playMusic(musicList.get(currentSongIndex+1));
 				currentSongIndex = currentSongIndex + 1;
 			} else {
 				// play first song
-				playSongFromIndex(0);
+				playMusic(musicList.get(0));
 				currentSongIndex = 0;
 			}
 		}
@@ -361,18 +343,20 @@ implements
 
 	@Override
 	public void onSwipe(int direction) {
-		
+		int currentPosition = mediaPlayer.getCurrentPosition();
+
 		if(isGestureEnabled) {
 			switch (direction) {
 
 			case SimpleGestureFilter.SWIPE_RIGHT:
 
 				if (currentSongIndex > 0) {
-					playSongFromIndex(currentSongIndex - 1);
+					playMusic(musicList.get(currentSongIndex - 1));
 					currentSongIndex = currentSongIndex - 1;
 				} else {
 					// play last song
-					playSongFromIndex(musicList.size() - 1);
+					playMusic(musicList.get(musicList.size() - 1));
+
 					currentSongIndex = musicList.size() - 1;
 				}
 
@@ -380,20 +364,45 @@ implements
 			case SimpleGestureFilter.SWIPE_LEFT:
 				// check if next song is there or not
 				if (currentSongIndex < (musicList.size() - 1)) {
-					playSongFromIndex(currentSongIndex + 1);
+					playMusic(musicList.get(currentSongIndex + 1));
+
 					currentSongIndex = currentSongIndex + 1;
 				} else {
 					// play first song
-					playSongFromIndex(0);
+					playMusic(musicList.get(0));
 					currentSongIndex = 0;
 				}
 
 				break;
 			case SimpleGestureFilter.SWIPE_DOWN:
-				// str = "Swipe Down";
+				// get current song position
+				// check if seekBackward time is greater than 0 sec
+				if (currentPosition - seekBackwardTime >= 0) {
+					// forward song
+					mediaPlayer.seekTo(currentPosition - seekBackwardTime);
+				} else {
+					// backward to starting position
+					mediaPlayer.seekTo(0);
+				}
+
 				break;
 			case SimpleGestureFilter.SWIPE_UP:
-				// str = "Swipe Up";
+				
+				
+				
+				// get current song position
+				// check if seekForward time is lesser than song duration
+				if (currentPosition + seekForwardTime <= mediaPlayer.getDuration()) {
+					// forward song
+					mediaPlayer.seekTo(currentPosition + seekForwardTime);
+				} else {
+					// forward to end position
+					mediaPlayer.seekTo(mediaPlayer.getDuration());
+				}
+			
+				
+				
+				
 				break;
 
 			}
@@ -538,11 +547,16 @@ implements
 		youtubeBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_SEARCH);
-				intent.setPackage("com.google.android.youtube");
-				intent.putExtra("query", artistName + " " + title);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
+				try {
+					Intent intent = new Intent(Intent.ACTION_SEARCH);
+					intent.setPackage("com.google.android.youtube");
+					intent.putExtra("query", artistName + " " + title);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(intent);
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), "Problem launching GOOGLE youtube app", Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				}
 
 			}
 		});
@@ -555,7 +569,7 @@ implements
 				if (isGestureEnabled) {
 					Random rand = new Random();
 					currentSongIndex = rand.nextInt((musicList.size() - 1) - 0 + 1) + 0;
-					playSongFromIndex(currentSongIndex);
+					playMusic(musicList.get(currentSongIndex));
 					Toast.makeText(getApplicationContext(), "Random",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -609,11 +623,13 @@ implements
 			public void onClick(View arg0) {
 				// check if next song is there or not
 				if (currentSongIndex < (musicList.size() - 1)) {
-					playSongFromIndex(currentSongIndex + 1);
+					playMusic(musicList.get(currentSongIndex + 1));
+
 					currentSongIndex = currentSongIndex + 1;
 				} else {
 					// play first song
-					playSongFromIndex(0);
+				
+				playMusic(musicList.get(0));
 					currentSongIndex = 0;
 				}
 
@@ -628,11 +644,12 @@ implements
 			@Override
 			public void onClick(View arg0) {
 				if (currentSongIndex > 0) {
-					playSongFromIndex(currentSongIndex - 1);
+					
+					playMusic(musicList.get(currentSongIndex - 1));
 					currentSongIndex = currentSongIndex - 1;
 				} else {
 					// play last song
-					playSongFromIndex(musicList.size() - 1);
+					playMusic(musicList.get(musicList.size() - 1));
 					currentSongIndex = musicList.size() - 1;
 				}
 
@@ -656,10 +673,8 @@ implements
 					isRepeat = true;
 					Toast.makeText(getApplicationContext(), "Repeat is ON",
 							Toast.LENGTH_SHORT).show();
-					// make shuffle to false
-					isShuffle = false;
+					
 					btnRepeat.setImageResource(R.drawable.btn_repeat_focused);
-					btnShuffle.setImageResource(R.drawable.btn_shuffle);
 				}
 			}
 		});
@@ -673,18 +688,21 @@ implements
 			public void onClick(View arg0) {
 				if (isShuffle) {
 					isShuffle = false;
+				
+					btnShuffle.setImageResource(R.drawable.btn_shuffle);
 					Toast.makeText(getApplicationContext(), "Shuffle is OFF",
 							Toast.LENGTH_SHORT).show();
-					btnShuffle.setImageResource(R.drawable.btn_shuffle);
 				} else {
 					// make repeat to true
-					isShuffle = true;
+					isShuffle = true;				
+					// make shuffle to false
+					isRepeat = true;
+					
+					btnShuffle.setImageResource(R.drawable.btn_shuffle_focused);
+					btnRepeat.setImageResource(R.drawable.btn_repeat_focused);
+					
 					Toast.makeText(getApplicationContext(), "Shuffle is ON",
 							Toast.LENGTH_SHORT).show();
-					// make shuffle to false
-					isRepeat = false;
-					btnShuffle.setImageResource(R.drawable.btn_shuffle_focused);
-					btnRepeat.setImageResource(R.drawable.btn_repeat);
 				}
 			}
 		});
@@ -761,7 +779,7 @@ implements
 
 			setPlayerView(musicList.get(songIndex));
 			
-			playerControl.playMusic(musicList.get(songIndex));;
+			playMusic(musicList.get(songIndex));;
 			mediaPlayer.pause();
 	    } catch (Exception e) {
 

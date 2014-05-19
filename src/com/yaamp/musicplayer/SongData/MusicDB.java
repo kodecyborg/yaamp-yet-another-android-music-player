@@ -119,7 +119,7 @@ public class MusicDB extends SQLiteOpenHelper{
 	public void addMusic(HashMap<String, String> musicMap){
 		
 		SQLiteDatabase db = this.getWritableDatabase();
-		
+	
 		try {
 			ContentValues values = new ContentValues();
 			values.put(KEY_SONG_PATH, musicMap.get(KEY_SONG_PATH));
@@ -149,9 +149,13 @@ public class MusicDB extends SQLiteOpenHelper{
 	
 	public void addMusic(Music music)
 	{
+		ArrayList<Music> m=getMusicsByColumnNameValue(this.KEY_SONG_PATH, music.getSongPath());
+		
+		if(m.size()==0){
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		try {
+
 			ContentValues values = new ContentValues();
 			values.put(KEY_SONG_PATH, music.getSongPath());
 			values.put(KEY_FILE_NAME, music.getSongFileName());
@@ -159,8 +163,8 @@ public class MusicDB extends SQLiteOpenHelper{
 			values.put(KEY_FILE_DIRECTORY, music.getFileDirectory()); 
 			values.put(KEY_ALBUM_NAME, music.getAlbumName()); 
 			values.put(KEY_ARTIST_NAME, music.getArtistName()); 
-			values.put(KEY_YEAR, music.getYear()); 
 			
+			values.put(KEY_YEAR, music.getYear()); 			
 			values.put(KEY_BITRATE, music.getBitRate());
 			values.put(KEY_DURATION, music.getDuration());
 			values.put(KEY_TRACK_NUMBER, music.getTrackNumber()); 
@@ -176,7 +180,8 @@ public class MusicDB extends SQLiteOpenHelper{
 		db.close();
 		
 
-		}
+		}}
+		
 	}
 	
 	

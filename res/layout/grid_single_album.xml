@@ -30,11 +30,11 @@
         android:layout_alignBottom="@+id/grid_image"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="14dp"
-        android:background="@android:color/background_light"
+                android:background="#802ECCFA"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:singleLine="true"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="15sp" />
    
 </RelativeLayout>

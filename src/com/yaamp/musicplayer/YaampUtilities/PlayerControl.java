@@ -2,13 +2,16 @@ package com.yaamp.musicplayer.YaampUtilities;
 
 import java.io.IOException;
 
+import android.app.Service;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
+import android.os.IBinder;
 
 import com.yaamp.musicplayer.SongData.Music;
 
-public class PlayerControl {
+public class PlayerControl extends Service{
 	 Equalizer equalizer =null;
 	 BassBoost bassBoost=null;
 	private  MediaPlayer mediaPlayer;
@@ -134,4 +137,12 @@ public class PlayerControl {
         equalizer=new Equalizer(0, 0);
         bassBoost=new BassBoost(0, 0);
 	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 }

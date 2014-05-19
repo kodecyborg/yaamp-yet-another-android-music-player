@@ -58,7 +58,7 @@ public class SimpleMusicListAdapter extends ArrayAdapter<Music>{
    	
 		
 
-       holder.txtTitle.setText(music.getSongTitle());
+       holder.txtTitle.setText(music.getTrackNumber()+"-"+music.getSongTitle());
        holder.txtArtist.setText(music.getArtistName());
        
        
