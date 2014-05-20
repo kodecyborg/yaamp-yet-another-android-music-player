@@ -149,9 +149,8 @@ public class MusicDB extends SQLiteOpenHelper{
 	
 	public void addMusic(Music music)
 	{
-		ArrayList<Music> m=getMusicsByColumnNameValue(this.KEY_SONG_PATH, music.getSongPath());
 		
-		if(m.size()==0){
+	
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		try {
@@ -182,7 +181,7 @@ public class MusicDB extends SQLiteOpenHelper{
 
 		}}
 		
-	}
+	
 	
 	
 	public ArrayList<Music> getAllMusics() {

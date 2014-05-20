@@ -40,7 +40,7 @@ public class GroupByAlbumFragment extends Fragment{
 	private ArrayList<Music> groups = new ArrayList<Music>();
 	private ArrayList<Music> albumSongs = new ArrayList<Music>();
 	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "hidden_state";
-	private int LastalbumPosition = -1;
+	private int lastAlbumPosition = -1;
 	SimpleMusicListAdapter albumMusicListAdapter;
 	private ImageView albumImage;
 	private ImageView playPause;
@@ -54,8 +54,8 @@ public class GroupByAlbumFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		
 		if (savedInstanceState != null) {
-			LastalbumPosition=savedInstanceState.getInt("position");
-			getMusicsFromAlbum(LastalbumPosition);
+			lastAlbumPosition=savedInstanceState.getInt("position");
+			getMusicsFromAlbum(lastAlbumPosition);
 			
 			
 		}
@@ -69,7 +69,7 @@ public class GroupByAlbumFragment extends Fragment{
 	public void onCreate(Bundle savedInstanceState) {
 		setRetainInstance(true);
 		sharedPref=new SharedPreferenceManager(getActivity());
-		LastalbumPosition=sharedPref.getLastSelectedAlbumIndex();
+		lastAlbumPosition=sharedPref.getLastSelectedAlbumIndex();
 		
 		super.onCreate(savedInstanceState);
 		
@@ -96,9 +96,9 @@ public class GroupByAlbumFragment extends Fragment{
 		albumImage = (ImageView) rootView.findViewById(R.id.albumImage);
 		playPause=(ImageView)rootView.findViewById(R.id.playPause);
 		
-			if(LastalbumPosition!=-1)
+			if(lastAlbumPosition!=-1)
 			{
-				getMusicsFromAlbum(LastalbumPosition);
+				getMusicsFromAlbum(lastAlbumPosition);
 
 			}
 		
@@ -150,7 +150,7 @@ public class GroupByAlbumFragment extends Fragment{
 					long arg3) {
 				sharedPref=new SharedPreferenceManager(getActivity());
 				sharedPref.setLastSelectedAlbumIndex(position);
-				LastalbumPosition = position;
+				lastAlbumPosition = position;
 				getMusicsFromAlbum(position);
 
 			}
@@ -177,7 +177,7 @@ public class GroupByAlbumFragment extends Fragment{
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt("position", LastalbumPosition);
+		outState.putInt("position", lastAlbumPosition);
 		super.onSaveInstanceState(outState);
 		
 
