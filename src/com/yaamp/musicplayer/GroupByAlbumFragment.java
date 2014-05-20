@@ -171,7 +171,7 @@ public class GroupByAlbumFragment extends Fragment{
 
 		albumImage.setImageBitmap(albumCover);
 		albumBigImage.setImageBitmap(albumCover);
-		albumNameTxt.setText(albumName+" by "+artistName);
+		albumNameTxt.setText(albumName+" by "+artistName.toUpperCase());
 
 		albumMusicListAdapter = new SimpleMusicListAdapter(context,
 				R.layout.simple_music_item, albumSongs);
