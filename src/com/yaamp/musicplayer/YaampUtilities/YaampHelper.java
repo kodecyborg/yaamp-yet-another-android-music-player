@@ -8,6 +8,7 @@ import com.yaamp.musicplayer.SongData.Music;
 import com.yaamp.musicplayer.SongData.MusicDB;
 import com.yaamp.musicplayer.SongData.MusicDataCacher;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.os.Environment;
 import android.util.Log;
 
 public class YaampHelper {
+	ProgressDialog progressBar;
 	// SDCard Path
 	public static final String MEDIA_PATH = Environment
 			.getExternalStorageDirectory().getPath();
@@ -33,6 +35,22 @@ public class YaampHelper {
 			return null;
 
 	}
+	
+	private void showProgress(Context context){
+		// prepare for a progress bar dialog
+					progressBar = new ProgressDialog(context);
+					progressBar.setCancelable(true);
+					progressBar.setMessage("File downloading ...");
+					progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+					progressBar.setProgress(0);
+					progressBar.setMax(100);
+					progressBar.show();
+
+			           }
+		 
+		                
+		 
+	
 
 	/**
 	 * Function to read all mp3 files from sdcard and store the details in
@@ -97,11 +115,25 @@ public class YaampHelper {
 		}
 	}
 
-	public static void scanLibrary(Context context, String filePath) {
-		MusicDB mdb = new MusicDB(context);
-		delecteCached(context);
-		mdb.dropTable();
-		createDatabase(context, filePath);
+	public static void scanLibrary(final Context context,final String filePath) {
+		final ProgressDialog myPd_ring=ProgressDialog.show(context, "Please wait", "Scanning music library..", true);
+        myPd_ring.setCancelable(false);
+        new Thread(new Runnable() {  
+              @Override
+              public void run() {
+                    // TODO Auto-generated method stub
+                    try
+                    {
+                    	MusicDB mdb = new MusicDB(context);
+                		delecteCached(context);
+                		mdb.dropTable();
+                		
+                		createDatabase(context, filePath);
+                    }catch(Exception e){}
+                    myPd_ring.dismiss();
+              }
+        }).start();
+		
 	}
 
 	private static void cacheLibrary(Context context, MusicDB mdb) {
@@ -139,16 +171,37 @@ public class YaampHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void createDatabase(Context context, String filePath) {
-		MusicDB mdb = new MusicDB(context);
+	public static void createDatabase(final Context context,final String filePath) {
+		final MusicDB mdb = new MusicDB(context);
 		ArrayList<Music> allMusics = (ArrayList<Music>) MusicDataCacher
 				.readObject(context, MusicDataCacher.KEY_ALL_MUSICS);
 		;
 		if (!mdb.isTablePresent() || allMusics == null) {
 			try {
-				mdb.createTable();
-				createMusicDB(context, filePath, mdb);
-				cacheLibrary(context, mdb);
+				
+				
+				final ProgressDialog myPd_ring=ProgressDialog.show(context, "Please wait", "Scanning music library..", true);
+		        myPd_ring.setCancelable(false);
+		        new Thread(new Runnable() {  
+		              @Override
+		              public void run() {
+		                    // TODO Auto-generated method stub
+		                    try
+		                    {
+		                    	mdb.createTable();
+		        				createMusicDB(context, filePath, mdb);
+		        				cacheLibrary(context, mdb);
+		                    }catch(Exception e){}
+		                    myPd_ring.dismiss();
+		              }
+		        }).start();
+				
+				
+				
+				
+				
+				
+				
 			} catch (Exception e) {
 				Log.e("Yaamp Database Error: ",
 						"Error creating database with name "
