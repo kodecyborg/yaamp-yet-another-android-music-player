@@ -44,6 +44,7 @@ public class GroupByAlbumFragment extends Fragment{
 	SimpleMusicListAdapter albumMusicListAdapter;
 	private ImageView albumImage;
 	private ImageView playPause;
+	private ImageView albumBigImage;
 	String albumName;
 	SharedPreferenceManager sharedPref;
 	PlayerControl playerControl;
@@ -95,7 +96,7 @@ public class GroupByAlbumFragment extends Fragment{
 		albumNameTxt = (TextView) rootView.findViewById(R.id.albumName);
 		albumImage = (ImageView) rootView.findViewById(R.id.albumImage);
 		playPause=(ImageView)rootView.findViewById(R.id.playPause);
-		
+		albumBigImage=(ImageView)rootView.findViewById(R.id.albumBigImage);
 			if(lastAlbumPosition!=-1)
 			{
 				getMusicsFromAlbum(lastAlbumPosition);
@@ -162,13 +163,15 @@ public class GroupByAlbumFragment extends Fragment{
 
 	private void getMusicsFromAlbum(int position) {
 		albumName = groups.get(position).getAlbumName();
+		String artistName=groups.get(position).getArtistName();
+
 		albumCover = YaampHelper.getAlbumCover(groups.get(position));
 		albumSongs = mdb.getMusicsByColumnNameValue(mdb.KEY_ALBUM_NAME,
 				albumName);
 
 		albumImage.setImageBitmap(albumCover);
-
-		albumNameTxt.setText(albumName);
+		albumBigImage.setImageBitmap(albumCover);
+		albumNameTxt.setText(albumName+" by "+artistName);
 
 		albumMusicListAdapter = new SimpleMusicListAdapter(context,
 				R.layout.simple_music_item, albumSongs);

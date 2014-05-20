@@ -90,7 +90,20 @@
                     android:src="@drawable/yaamp_head" />
             </LinearLayout>
             <!-- background content -->
-
+             <RelativeLayout 
+                  android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+                 >
+                 
+            
+            <ImageView
+                    android:id="@+id/albumBigImage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:alpha="0.1"
+                    android:src="@drawable/yaamp_head" />
+            
             <ListView
                 android:id="@+id/albumMusicList"
                 android:layout_width="match_parent"
@@ -99,6 +112,7 @@
                 android:dividerHeight="1dp"
                 android:listSelector="@drawable/list_selector" >
             </ListView>
+              </RelativeLayout>
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
