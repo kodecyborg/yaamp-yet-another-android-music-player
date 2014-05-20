@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shape_selector" >
 
@@ -169,14 +169,15 @@
             android:src="@drawable/btn_shuffle" />
     </LinearLayout>
 
-
     <SeekBar
         android:id="@+id/songProgressBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="84dp" />
+        android:layout_marginBottom="84dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp" />
 
     <TextView
         android:id="@+id/songTotalDurationLabel"
@@ -184,7 +185,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/songCurrentDurationLabel"
         android:layout_alignBottom="@+id/songCurrentDurationLabel"
-        android:layout_alignLeft="@+id/timerDisplay"
       
         android:gravity="right"
                             android:paddingRight="10dp"

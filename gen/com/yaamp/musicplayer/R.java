@@ -198,11 +198,11 @@ containing a value of this type.
         public static final int sliding_layout=0x7f09001d;
         public static final int songCurrentDurationLabel=0x7f090038;
         public static final int songProgressBar=0x7f090034;
-        public static final int songThumbnail=0x7f09003a;
+        public static final int songThumbnail=0x7f090039;
         public static final int songTitle=0x7f09002b;
         public static final int songTotalDurationLabel=0x7f090037;
         public static final int textInfos=0x7f090002;
-        public static final int timerDisplay=0x7f090039;
+        public static final int timerDisplay=0x7f09003a;
         public static final int txt1=0x7f09003b;
         public static final int txt2=0x7f09003c;
         public static final int youtubeBtn=0x7f09002a;
