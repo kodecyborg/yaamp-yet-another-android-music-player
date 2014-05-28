@@ -102,7 +102,6 @@ implements
 	private String albumName = "";
 	private String artistName = "";
 	private String title = "";
-	private int songIndex = 0;
 	private int progress=0;
 	private PlayerControl playerControl=PlayerControl.getInstance();
 	private Music currentMusic;
@@ -115,13 +114,6 @@ implements
 	
 		
 		try {
-			/*	To be implemented
-			if(getIntent().getAction().equalsIgnoreCase(Intent.ACTION_VIEW))
-			{
-				Toast.makeText(this, getIntent().getData().getPath()+"", Toast.LENGTH_LONG).show();
-
-			}
-		*/	
 			init();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -465,6 +457,7 @@ implements
 		return true;
 	}
 
+	//Initialize UI components
 	private void init() throws IOException, ClassNotFoundException {
 
 		youtubeBtn = (ImageButton) findViewById(R.id.youtubeBtn);
@@ -759,11 +752,9 @@ implements
 			
 			
 		    currentSongIndex=sharedPrefManager.getLastPlaylistIndex();
-			songIndex=currentSongIndex;
-
-			setPlayerView(musicList.get(songIndex));
+			setPlayerView(musicList.get(currentSongIndex));
 			
-			playMusic(musicList.get(songIndex));;
+			playMusic(musicList.get(currentSongIndex));;
 			mediaPlayer.pause();
 	    } catch (Exception e) {
 

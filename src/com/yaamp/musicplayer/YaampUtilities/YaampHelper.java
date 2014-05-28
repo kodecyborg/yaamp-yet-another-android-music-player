@@ -35,8 +35,6 @@ public class YaampHelper {
 			return null;
 
 	}
-	
-
 
 	/**
 	 * Function to read all mp3 files from sdcard and store the details in
@@ -60,7 +58,7 @@ public class YaampHelper {
 						|| f.getName().endsWith(".wma")
 						|| f.getName().endsWith(".WMA")
 						|| f.getName().endsWith(".m4a")
-						
+
 						|| f.getName().endsWith(".M4A")
 
 				) {
@@ -101,25 +99,26 @@ public class YaampHelper {
 		}
 	}
 
-	public static void scanLibrary(final Context context,final String filePath) {
-		final ProgressDialog myPd_ring=ProgressDialog.show(context, "Please wait", "Scanning music library..", true);
-        myPd_ring.setCancelable(false);
-        new Thread(new Runnable() {  
-              @Override
-              public void run() {
-                    // TODO Auto-generated method stub
-                    try
-                    {
-                    	MusicDB mdb = new MusicDB(context);
-                		delecteCached(context);
-                		mdb.dropTable();
-                		
-                		createDatabase(context, filePath);
-                    }catch(Exception e){}
-                    myPd_ring.dismiss();
-              }
-        }).start();
-		
+	public static void scanLibrary(final Context context, final String filePath) {
+		final ProgressDialog myPd_ring = ProgressDialog.show(context,
+				"Please wait", "Scanning music library..", true);
+		myPd_ring.setCancelable(false);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					MusicDB mdb = new MusicDB(context);
+					delecteCached(context);
+					mdb.dropTable();
+
+					createDatabase(context, filePath);
+				} catch (Exception e) {
+				}
+				myPd_ring.dismiss();
+			}
+		}).start();
+
 	}
 
 	private static void cacheLibrary(Context context, MusicDB mdb) {
@@ -157,37 +156,32 @@ public class YaampHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void createDatabase(final Context context,final String filePath) {
+	public static void createDatabase(final Context context,
+			final String filePath) {
 		final MusicDB mdb = new MusicDB(context);
 		ArrayList<Music> allMusics = (ArrayList<Music>) MusicDataCacher
 				.readObject(context, MusicDataCacher.KEY_ALL_MUSICS);
-		;
+		
 		if (!mdb.isTablePresent() || allMusics == null) {
 			try {
-				
-				
-				final ProgressDialog myPd_ring=ProgressDialog.show(context, "Please wait", "Scanning music library..", true);
-		        myPd_ring.setCancelable(false);
-		        new Thread(new Runnable() {  
-		              @Override
-		              public void run() {
-		                    // TODO Auto-generated method stub
-		                    try
-		                    {
-		                    	mdb.createTable();
-		        				createMusicDB(context, filePath, mdb);
-		        				cacheLibrary(context, mdb);
-		                    }catch(Exception e){}
-		                    myPd_ring.dismiss();
-		              }
-		        }).start();
-				
-				
-				
-				
-				
-				
-				
+
+				final ProgressDialog myPd_ring = ProgressDialog.show(context,
+						"Please wait", "Scanning music library..", true);
+				myPd_ring.setCancelable(false);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							mdb.createTable();
+							createMusicDB(context, filePath, mdb);
+							cacheLibrary(context, mdb);
+						} catch (Exception e) {
+						}
+						myPd_ring.dismiss();
+					}
+				}).start();
+
 			} catch (Exception e) {
 				Log.e("Yaamp Database Error: ",
 						"Error creating database with name "

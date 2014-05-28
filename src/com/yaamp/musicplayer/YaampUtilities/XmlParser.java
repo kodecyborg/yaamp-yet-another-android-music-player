@@ -33,6 +33,7 @@ public class XmlParser {
 	static String XML_OUTPUT_FILE=Environment.getExternalStorageDirectory().getPath()+"/yaamp_sdb.xml";
 	private static ArrayList<HashMap<String, String>> xmlSongsList = new ArrayList<HashMap<String, String>>();
 
+	
 	public static  ArrayList<HashMap<String, String>> getPlayListFromXML(String xmlFilePath,String rootNode)
 	{
 		
@@ -81,16 +82,15 @@ public class XmlParser {
 						songsList.add(songMap);
 					}
 				}
-				Log.d("--------------------------xmlSize",songsList.size()+"");
 				
 				}
 				else
 
-					Log.d("--------------------------xmlExists","File does not exists");
+					Log.d("XmlParser","File does not exists");
 					
 			    } catch (Exception e) {
 				e.printStackTrace();
-				Log.d("--------------------------xmlSize",songsList.size()+" Problem parsing file");
+				Log.d("XmlParser",songsList.size()+" Problem parsing file");
 
 			    }
 		 		return songsList;
@@ -222,7 +222,7 @@ public class XmlParser {
 		  }
 		
 	 
-	 //PullParse music library
+	 //Android PullParser
 	 public static ArrayList<HashMap<String, String>> pullParse(String xmlPath)
 		{
 			HashMap<String, String> song=new HashMap<String, String>();
@@ -247,11 +247,11 @@ public class XmlParser {
 					switch (eventType) {
 					
 		                case XmlPullParser.START_DOCUMENT:
-		                   Log.i("SongsManager.pullParse message","START_DOCUMENT");
+		                   Log.i("PullParser message","START_DOCUMENT");
 		                    break;
 		                    
 		                case XmlPullParser.END_DOCUMENT:
-			                   Log.i("SongsManager.pullParse message","END_DOCUMENT");
+			                   Log.i("PullParser message","END_DOCUMENT");
 			                    break;  
 			                    
 		                case XmlPullParser.END_TAG:    
