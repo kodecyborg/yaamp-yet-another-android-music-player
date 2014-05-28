@@ -36,21 +36,7 @@ public class YaampHelper {
 
 	}
 	
-	private void showProgress(Context context){
-		// prepare for a progress bar dialog
-					progressBar = new ProgressDialog(context);
-					progressBar.setCancelable(true);
-					progressBar.setMessage("File downloading ...");
-					progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-					progressBar.setProgress(0);
-					progressBar.setMax(100);
-					progressBar.show();
 
-			           }
-		 
-		                
-		 
-	
 
 	/**
 	 * Function to read all mp3 files from sdcard and store the details in

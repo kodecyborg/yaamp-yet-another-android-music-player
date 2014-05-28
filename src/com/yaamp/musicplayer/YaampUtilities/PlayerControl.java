@@ -72,6 +72,8 @@ public class PlayerControl extends Service{
 			}
 			
 		}
+		
+		
 		catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,31 +109,9 @@ public class PlayerControl extends Service{
 	}
 	
 
+
 	
-	public void stop(Music music){
-		
-	}
-	
-	public void pause(Music music){
-		
-	}
-	/*
-	public void playNext(int currentSongIndex)
-	{
-		
-		if (currentSongIndex > 0) {
-			playSong(currentSongIndex - 1);
-			currentSongIndex = currentSongIndex - 1;
-		} else {
-			// play last song
-			playSong(songsList.size() - 1);
-			currentSongIndex = songsList.size() - 1;
-		}
-	}
-	*/
-	public void playPrevious()
-	{}
-	
+
 	private PlayerControl() { 
         mediaPlayer=new MediaPlayer();
         equalizer=new Equalizer(0, 0);

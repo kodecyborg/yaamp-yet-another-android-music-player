@@ -103,9 +103,9 @@ implements
 	private String artistName = "";
 	private String title = "";
 	private int songIndex = 0;
-
+	private int progress=0;
 	private PlayerControl playerControl=PlayerControl.getInstance();
-	
+	private Music currentMusic;
 	
 	// Detect touched area
 	@Override
@@ -234,22 +234,7 @@ implements
 		
 	}
 	
-	public void playMusic(Music music) {
 	
-		try {
-	
-				playerControl.playMusic(music);		
-				setPlayerView(music);
-				btnPlay.setImageResource(R.drawable.btn_pause);
-
-				updateProgressBar();
-			
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} 
-	}
 
 
 	/**
@@ -436,11 +421,10 @@ implements
 	private void showUserSettings() {
 		SharedPreferences sharedPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-
 		isGestureEnabled = sharedPrefs.getBoolean("gestureControl", false);
-
 	}
 
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -729,7 +713,7 @@ implements
 		
 		
 		
-		String[] val=YaampHelper.Metadata.getMetadataStringArray(musicList.get(songIndex));
+		String[] val=YaampHelper.Metadata.getMetadataStringArray(currentMusic);
 
 		ListAdapter itemsAdapter = new ArrayAdapter<String>(
 				this.getApplicationContext(),
@@ -834,8 +818,25 @@ implements
 
 		}
 	};
+	
+	//Play music and update UI
+		public void playMusic(Music music) {
+		
+			try {
+					this.currentMusic=music;
+					playerControl.playMusic(music);		
+					setPlayerView(music);
+					btnPlay.setImageResource(R.drawable.btn_pause);
 
-int progress=0;
+					updateProgressBar();
+				
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} 
+		}
+
 
 
 
