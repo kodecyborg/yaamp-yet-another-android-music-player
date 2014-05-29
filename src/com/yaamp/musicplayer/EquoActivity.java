@@ -1,6 +1,5 @@
 package com.yaamp.musicplayer;
 
-import com.yaamp.musicplayer.R;
 import com.yaamp.musicplayer.YaampUtilities.PlayerControl;
 
 import android.app.Activity;
