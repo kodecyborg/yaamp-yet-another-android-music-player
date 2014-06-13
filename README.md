@@ -1,11 +1,7 @@
 yaamp-yet-another-android-music-player
 ======================================
 
-Quick installation guide
-1-Import the project into workspace
-2-Import android AndroidSlidingUpPanel library project into workspace
-3-Under properties -> Android -> Library point to the library folder and click Apply
-
+A demo version of the audio player developed during a contract in Atlanta with Jules Madison.This version is in its very early stage.  Stay tuned for more on the android app store. Final version would give possibility to read your itunes library, buy audio online and watch videos or rented movies directly from the player. 
 
 ![](https://raw.githubusercontent.com/kodecyborg/yaamp-yet-another-android-music-player/master/screenshots/1.jpg)
 
