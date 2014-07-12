@@ -1,7 +1,7 @@
 yaamp-yet-another-android-music-player
 ======================================
 
-Early stage demo version. Movie rental and more tweaks to be implemented.
+Early stage demo version. Movie rental and tweaks to be implemented.
 
 ![](https://raw.githubusercontent.com/kodecyborg/yaamp-yet-another-android-music-player/master/screenshots/1.jpg)
 
