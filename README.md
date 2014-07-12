@@ -1,7 +1,7 @@
 yaamp-yet-another-android-music-player
 ======================================
 
-A demo version of the audio player developed during a contract in Atlanta with Jules Madison.This version is in its very early stage.  Stay tuned for more on the android app store. Final version would give possibility to read your itunes library, buy audio online and watch videos or rented movies directly from the player. 
+Early stage demo version. Movie rental and more tweaks to be implemented.
 
 ![](https://raw.githubusercontent.com/kodecyborg/yaamp-yet-another-android-music-player/master/screenshots/1.jpg)
 
